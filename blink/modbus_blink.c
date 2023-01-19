@@ -3,6 +3,15 @@
 #include <errno.h>
 #include <time.h>
 
+#define PINMODE 1
+#define DIGITALWRITE 2
+
+#define INPUT 0
+#define OUTPUT 1
+
+#define LOW 0
+#define HIGH 1
+
 int delay(int ms) {
 	clock_t start_time = clock();
 	while(clock() < start_time + ms*1000);
@@ -33,18 +42,22 @@ int main() {
 	}
 	
 	// Set pinMode of pin 13 to OUTPUT
-	uint16_t OUTPUT = 0x0001;
-	modbus_write_register(arduino, 13, OUTPUT);
-
+	uint16_t command[3] = {PINMODE, 13, OUTPUT};
+	modbus_write_registers(arduino, 0, 3, command);
+	
 	while(1) {
-		// Write 1 bit, starting at address 0 on the arduino, to the led_on buffer (1)
-		modbus_write_bit(arduino, 43, 1);
-		printf("On\n");
+		// Turn on LED
+		command[0] = DIGITALWRITE;
+		command[1] = 13;
+		command[2] = HIGH;
+		modbus_write_registers(arduino, 0, 3, command);
 		delay(1000);
-
-		// Write 1 bit, starting at address 0 on the arduino, to the led_off buffer (0)
-		modbus_write_bit(arduino, 43, 0);
-		printf("Off\n");
+		
+		// Turn off LED
+		command[0] = DIGITALWRITE;
+		command[1] = 13;
+		command[2] = LOW;
+		modbus_write_registers(arduino, 0, 3, command);
 		delay(1000);
 	}
 	
