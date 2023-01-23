@@ -1,16 +1,4 @@
-#include <stdio.h>
-#include <modbus.h>
-#include <errno.h>
-#include <time.h>
-
-#define PINMODE 1
-#define DIGITALWRITE 2
-
-#define INPUT 0
-#define OUTPUT 1
-
-#define LOW 0
-#define HIGH 1
+#include <ModmataC.c>
 
 int delay(int ms) {
 	clock_t start_time = clock();
@@ -18,9 +6,9 @@ int delay(int ms) {
 }
 
 int main() {
-	// Connect arduino to port /dev/ttyACM0 with baud rate 9600, no parity bits, 8 data bits, and 1 stop bit
+	//	start serial connection with arduino, given a port and baud rate
 	modbus_t *arduino;
-	arduino = modbus_new_rtu("/dev/ttyACM0", 9600, 'N', 8, 1);
+	startSerial(arduino, "/dev/ttyACM0", 9600);
 	
 	if(arduino == NULL) {
 		fprintf(stderr, "Unable to create the libmodbus context\n");
@@ -41,23 +29,16 @@ int main() {
 		return -1;
 	}
 	
-	// Set pinMode of pin 13 to OUTPUT
-	uint16_t command[3] = {PINMODE, 13, OUTPUT};
-	modbus_write_registers(arduino, 0, 3, command);
+	// Set mode of pin 13 to OUTPUT
+	pinMode(arduino, 13, OUTPUT);
 	
 	while(1) {
 		// Turn on LED
-		command[0] = DIGITALWRITE;
-		command[1] = 13;
-		command[2] = HIGH;
-		modbus_write_registers(arduino, 0, 3, command);
+		digitalWrite(arduino, 13, HIGH);
 		delay(1000);
 		
 		// Turn off LED
-		command[0] = DIGITALWRITE;
-		command[1] = 13;
-		command[2] = LOW;
-		modbus_write_registers(arduino, 0, 3, command);
+		digitalWrite(arduino, 13, LOW);
 		delay(1000);
 	}
 	
