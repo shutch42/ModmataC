@@ -1,11 +1,6 @@
 #include "ModmataC.h"
 #include <time.h>
 
-int delay(int ms) {
-	clock_t start_time = clock();
-	while(clock() < start_time + ms*1000);
-}
-
 int main() {
 	//	start serial connection with arduino, given a port and baud rate
 	modbus_t *arduino;
@@ -30,17 +25,22 @@ int main() {
 		return -1;
 	}
 	
-	// Set mode of pin 13 to OUTPUT
-	pinMode(arduino, 13, OUTPUT);
-	
+	pinMode(arduino, 7, INPUT);
+    pinMode(arduino, 13, OUTPUT);
+	int value = -1;
+    int led_state = LOW;
+
 	while(1) {
-		// Turn on LED
-		digitalWrite(arduino, 13, HIGH);
-		delay(1000);
-		
-		// Turn off LED
-		digitalWrite(arduino, 13, LOW);
-		delay(1000);
+		value = digitalRead(arduino, 7);
+        if(value && !led_state) {
+            led_state = HIGH;
+            digitalWrite(arduino, 13, HIGH);
+        }
+        else if(!value && led_state) {
+            led_state = LOW;
+            digitalWrite(arduino, 13, LOW);
+        }
+        printf("%i\n", value);
 	}
 	
 	// Clean out memory

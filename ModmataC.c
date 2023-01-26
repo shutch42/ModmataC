@@ -28,16 +28,16 @@ Last Updated:
 //  checks if a pin is valid, based on the
 //  
 //  valid pins are 1-30
-bool isValidPin(int pinNum)
+int isValidPin(int pinNum)
 {
     //  check if pin number is valid
     if (pinNum < 1 || pinNum > 30)
     {
         printf("invalid pin number\n");
-        return false;
+        return 0;
     }
 
-    return true
+    return 1;
 }
 
 //  start serial connection using specified port and baud rate
