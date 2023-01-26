@@ -17,7 +17,7 @@
 #define HIGH 1
 
 //  checks if pinNum is valid (1-30)
-bool isValidPin(int pinNum);
+int isValidPin(int pinNum);
 
 //  begins serial connection with arduino
 void startSerial(modbus_t *arduino, char *port, int baudRate);
