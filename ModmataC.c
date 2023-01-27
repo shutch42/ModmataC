@@ -136,3 +136,56 @@ int analogRead(modbus_t *arduino, int pinNum)
     //  return -1 if invalid pin
     return -1;
 }
+
+//  attach servo to a pin
+//  TODO: add validation for pwm pin
+void servoAttach(modbus_t *arduino, int pinNum)
+{
+    uint16_t command[2] = {SERVOATTACH, pinNum};
+    modbus_write_registers(arduino, 0, 2, command);
+    return;
+}
+
+//  detach servo from a pin
+void servoDetach(modbus_t *arduino, int pinNum)
+{
+    uint16_t command[2] = {SERVODETACH, pinNum};
+    modbus_write_registers(arduino, 0, 2, command);
+    return;
+}
+
+//  write/read values to/from a servo assigned pin
+//  TODO: add validation for pwm pin
+void servoWrite(modbus_t *arduino, int pinNum, int input)
+{
+    //  ensures valid pin number and input is between 0 and 255
+    if (isValidPin(pinNum) && !(input < 0 || input > 255))
+    {
+        uint16_t command[3] = {SERVOWRITE, pinNum, input};
+        modbus_write_registers(arduino, 0, 3, command);
+    }
+    return;
+}
+
+//  read value from a servo assigned pin
+//  returns 0 if fails
+int servoRead(modbus_t *arduino, int pinNum)
+{
+    if (isValidPin(pinNum))
+    {
+        //  tell the arduino we're reading a value
+        uint16_t command[2] = {SERVOREAD, pinNum};
+        modbus_write_registers(arduino, 0, 2, command);
+
+        //  read the value that should now be in address 2
+        uint16_t dest;
+        modbus_read_registers(arduino, 2, 1, &dest);
+
+        int value = dest;
+
+        return value;
+    }
+
+    //  return -1 if invalid pin
+    return -1;
+}
