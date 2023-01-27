@@ -158,8 +158,8 @@ void servoDetach(modbus_t *arduino, int pinNum)
 //  TODO: add validation for pwm pin
 void servoWrite(modbus_t *arduino, int pinNum, int input)
 {
-    //  ensures valid pin number and input is between 0 and 255
-    if (isValidPin(pinNum) && !(input < 0 || input > 255))
+    //  ensures valid pin number and input is between 0 and 180
+    if (isValidPin(pinNum) && !(input < 0 || input > 180))
     {
         uint16_t command[3] = {SERVOWRITE, pinNum, input};
         modbus_write_registers(arduino, 0, 3, command);
