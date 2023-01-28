@@ -42,10 +42,25 @@ int isValidPin(int pinNum)
 
 //  start serial connection using specified port and baud rate
 //  no parity bits, 8 data bits, 1 stop bit
-void startSerial(modbus_t *arduino, char *port, int baudRate)
+modbus_t* connectArduino(char *port, int baudRate, int id)
 {
-    arduino = modbus_new_rtu(port, baudRate, 'N', 8, 1);
-    return;
+    modbus_t* arduino = modbus_new_rtu(port, baudRate, 'N', 8, 1);
+    if(!arduino) {
+    	fprintf(stderr, "unable to create the libmodbus context\n");
+	return NULL;
+    }
+    if(modbus_set_slave(arduino, id) == -1) {
+    	fprintf(stderr, "Invalid slave ID\n");
+        modbus_free(arduino);
+	return NULL;
+    }
+    if(modbus_connect(arduino) == -1) {
+    	fprintf(stderr, "Connection failed: %s\n", modbus_strerror(errno));
+        modbus_free(arduino);
+	return NULL;
+    }
+
+    return arduino;
 }
 
 // sets pin mode
