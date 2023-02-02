@@ -20,7 +20,7 @@
 int isValidPin(int pinNum);
 
 //  begins serial connection with arduino
-void startSerial(modbus_t *arduino, char *port, int baudRate);
+modbus_t* connectArduino(char *port, int baudRate, int id);
 
 //  sets mode of a given pin
 void pinMode(modbus_t *arduino, int pinNum, int mode);
