@@ -9,6 +9,10 @@
 #define ANALOGREFERENCE 4
 #define ANALOGWRITE 5
 #define ANALOGREAD 6
+#define SERVOATTACH 7
+#define SERVODETACH 8
+#define SERVOWRITE 0
+#define SERVOREAD 10
 
 #define INPUT 0
 #define OUTPUT 1
@@ -32,3 +36,11 @@ int digitalRead(modbus_t *arduino, int pinNum);
 //  write/read values to/from a pwm pin
 void analogWrite(modbus_t *arduino, int pinNum, int input);
 int analogRead(modbus_t *arduino, int pinNum);
+
+//  attach/detach servo to/from a pin
+void servoAttach(modbus_t *arduino, int pinNum);
+void servoDetach(modbus_t *arduino, int pinNum);
+
+//  write/read values to/from a servo assigned pin
+void servoWrite(modbus_t *arduino, int pinNum, int input);
+int servoRead(modbus_t *arduino, int pinNum);
