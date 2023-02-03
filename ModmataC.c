@@ -25,6 +25,13 @@ Last Updated:
 
 #include "ModmataC.h"
 
+static void exit(int sig) {
+    modbus_close(arduino);
+    modbus_free(arduino);
+    signal(sig, SIG_DFL);
+    raise(sig);
+}
+
 //  checks if a pin is valid, based on the
 //  
 //  valid pins are 1-30
@@ -42,29 +49,30 @@ int isValidPin(int pinNum)
 
 //  start serial connection using specified port and baud rate
 //  no parity bits, 8 data bits, 1 stop bit
-modbus_t* connectArduino(char *port, int baudRate, int id)
+int connectArduino(char *port, int baudRate, int id)
 {
-    modbus_t* arduino = modbus_new_rtu(port, baudRate, 'N', 8, 1);
+    arduino = modbus_new_rtu(port, baudRate, 'N', 8, 1);
     if(!arduino) {
     	fprintf(stderr, "unable to create the libmodbus context\n");
-	return NULL;
+	return 0;
     }
     if(modbus_set_slave(arduino, id) == -1) {
     	fprintf(stderr, "Invalid slave ID\n");
         modbus_free(arduino);
-	return NULL;
+	return 0;
     }
     if(modbus_connect(arduino) == -1) {
     	fprintf(stderr, "Connection failed: %s\n", modbus_strerror(errno));
         modbus_free(arduino);
-	return NULL;
+	return 0;
     }
-
-    return arduino;
+    signal(SIGINT, exit);
+    signal(SIGTERM, exit);
+    return 1;
 }
 
 // sets pin mode
-void pinMode(modbus_t *arduino, int pinNum, int mode)
+void pinMode(int pinNum, int mode)
 {
     //  check if pin number is valid
     if (isValidPin(pinNum))
@@ -80,7 +88,7 @@ void pinMode(modbus_t *arduino, int pinNum, int mode)
 }
 
 //  writes a HIGH or LOW value to a digital pin
-void digitalWrite(modbus_t *arduino, int pinNum, int input)
+void digitalWrite(int pinNum, int input)
 {
     //  ensures valid pin number and that input is either 0 (LOW) or 1 (HIGH)
     if (isValidPin(pinNum) && (input == 0 || input == 1))
@@ -93,7 +101,7 @@ void digitalWrite(modbus_t *arduino, int pinNum, int input)
 }
 
 //  reads the value of a digital pin
-int digitalRead(modbus_t *arduino, int pinNum)
+int digitalRead(int pinNum)
 {
 
     if (isValidPin(pinNum))
@@ -116,7 +124,7 @@ int digitalRead(modbus_t *arduino, int pinNum)
 }
 
 //  writes an analog value (PWM wave, 0-255) to a pin
-void analogWrite(modbus_t *arduino, int pinNum, int input)
+void analogWrite(int pinNum, int input)
 {
     //  TODO: make sure pin is also analog pin
 
@@ -131,7 +139,7 @@ void analogWrite(modbus_t *arduino, int pinNum, int input)
 }
 
 // reads the value of an analog (PWM) pin
-int analogRead(modbus_t *arduino, int pinNum)
+int analogRead(int pinNum)
 {
     if (isValidPin(pinNum))
     {
@@ -154,7 +162,7 @@ int analogRead(modbus_t *arduino, int pinNum)
 
 //  attach servo to a pin
 //  TODO: add validation for pwm pin
-void servoAttach(modbus_t *arduino, int pinNum)
+void servoAttach(int pinNum)
 {
     uint16_t command[2] = {SERVOATTACH, pinNum};
     modbus_write_registers(arduino, 0, 2, command);
@@ -162,7 +170,7 @@ void servoAttach(modbus_t *arduino, int pinNum)
 }
 
 //  detach servo from a pin
-void servoDetach(modbus_t *arduino, int pinNum)
+void servoDetach(int pinNum)
 {
     uint16_t command[2] = {SERVODETACH, pinNum};
     modbus_write_registers(arduino, 0, 2, command);
@@ -171,7 +179,7 @@ void servoDetach(modbus_t *arduino, int pinNum)
 
 //  write/read values to/from a servo assigned pin
 //  TODO: add validation for pwm pin
-void servoWrite(modbus_t *arduino, int pinNum, int input)
+void servoWrite(int pinNum, int input)
 {
     //  ensures valid pin number and input is between 0 and 180
     if (isValidPin(pinNum) && !(input < 0 || input > 180))
@@ -184,7 +192,7 @@ void servoWrite(modbus_t *arduino, int pinNum, int input)
 
 //  read value from a servo assigned pin
 //  returns 0 if fails
-int servoRead(modbus_t *arduino, int pinNum)
+int servoRead(int pinNum)
 {
     if (isValidPin(pinNum))
     {
