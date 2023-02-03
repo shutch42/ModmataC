@@ -11,7 +11,7 @@
 #define ANALOGREAD 6
 #define SERVOATTACH 7
 #define SERVODETACH 8
-#define SERVOWRITE 0
+#define SERVOWRITE 9
 #define SERVOREAD 10
 
 #define INPUT 0
