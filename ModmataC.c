@@ -25,11 +25,18 @@ Last Updated:
 
 #include "ModmataC.h"
 
-static void exit(int sig) {
+static void exit(int sig)
+{
     modbus_close(arduino);
     modbus_free(arduino);
     signal(sig, SIG_DFL);
     raise(sig);
+}
+
+void delay(int ms)
+{
+   clock_t start_time = clock();
+   while(clock() < start_time + ms*1000);
 }
 
 //  checks if a pin is valid, based on the

@@ -2,6 +2,7 @@
 #include <signal.h>
 #include <modbus.h>
 #include <errno.h>
+#include <time.h>
 
 #define IDLE 0
 #define PINMODE 1
@@ -25,6 +26,9 @@ static modbus_t* arduino;
 
 //  handles SIGINT signal and disconnects modbus before exiting
 static void exit(int signal);
+
+//  creates a system delay before sending the next command
+void delay(int ms);
 
 //  checks if pinNum is valid (1-30)
 int isValidPin(int pinNum);
