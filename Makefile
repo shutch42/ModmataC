@@ -1,2 +1,2 @@
 all:
-	gcc ModmataC_button.c ModmataC.c `pkg-config --cflags --libs libmodbus`
+	gcc ModmataC_blink.c ModmataC.c `pkg-config --cflags --libs libmodbus`
