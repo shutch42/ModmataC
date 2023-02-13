@@ -1,26 +1,22 @@
 #include "ModmataC.h"
-#include <time.h>
-
-int delay(int ms) {
-	clock_t start_time = clock();
-	while(clock() < start_time + ms*1000);
-}
+#include <stdlib.h>
 
 int main() {
 	//	start serial connection with arduino, given a port and baud rate
-	modbus_t *arduino = connectArduino("/dev/ttyACM0", 9600, 1);
+	connectArduino("/dev/ttyACM0", 9600, 1);
 	
-	servoAttach(arduino, 9);
+	servoAttach(6);
+	delay(1000);
 	
-	while(1) {
-		servoWrite(arduino, 0);
-		delay(1000);
-		
-		servoWrite(arduino, 180);
-		delay(1000);
+	for(int i = 0; i <= 180; i++) {
+		servoWrite(6, i);
+		delay(15);
 	}
-	
-	// Clean out memory
-	modbus_close(arduino);
-	modbus_free(arduino);
+	for(int i = 180; i >= 0; i--) {
+		servoWrite(6, i);
+		delay(15);
+	}
+
+	servoDetach(6);
+	closeConnection();
 }
