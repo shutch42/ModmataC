@@ -33,6 +33,11 @@ static void exit(int sig)
     raise(sig);
 }
 
+void closeConnection() {
+    modbus_close(arduino);
+    modbus_free(arduino);
+}
+
 void delay(int ms)
 {
    clock_t start_time = clock();

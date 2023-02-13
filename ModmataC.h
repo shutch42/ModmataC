@@ -27,7 +27,10 @@ static modbus_t* arduino;
 //  handles SIGINT signal and disconnects modbus before exiting
 static void exit(int signal);
 
-//  creates a system delay before sending the next command
+//  disconnect modbus connection if the program does not have an infinite loop
+void closeConnection();
+
+//  creates a system delay before moving to the next line 
 void delay(int ms);
 
 //  checks if pinNum is valid (1-30)
