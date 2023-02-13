@@ -24,36 +24,102 @@
 
 static modbus_t* arduino;
 
-//  handles SIGINT signal and disconnects modbus before exiting
+/**
+handles SIGINT signal and disconnects modbus before exiting
+@param (int) signal
+@return void
+*/
 static void exit(int signal);
 
 //  disconnect modbus connection if the program does not have an infinite loop
 void closeConnection();
 
-//  creates a system delay before moving to the next line 
+/**
+Causes the system to delay a number of miliseconds
+@param (int) miliseconds
+@return void
+*/
 void delay(int ms);
 
-//  checks if pinNum is valid (1-30)
+/**
+Determines if a given pin number is valid (valid pins are 1-30)
+@param (int) pin number
+@return (int) 1 if valid, 0 if invalid
+*/
 int isValidPin(int pinNum);
 
-//  begins serial connection with arduino
+/**
+Initiates connection between machine and Arduino
+@param (char*) path to port
+@param (int) baud rate (9600 default)
+@param (int) slave id
+@return (int) 1 if connection is successful, 0 if failure
+*/
 int connectArduino(char *port, int baudRate, int id);
 
-//  sets mode of a given pin
+/**
+Sets the pin mode of a pin on the Arduino
+@param (int) pin number
+@param (int) mode to set pin to
+@return void
+*/
 void pinMode(int pinNum, int mode);
 
-//  write/read values to/from a digital pin
+/**
+Writes a digital value (1 or 0) to a pin
+@param (int) pin number
+@param (int) value to be written
+@return void
+*/
 void digitalWrite(int pinNum, int input);
+
+/**
+Reads the value of a digital pin
+@param (int) pin number
+@return (int) value read from pin
+*/
 int digitalRead(int pinNum);
 
-//  write/read values to/from a pwm pin
+/**
+Writes an analog value to a pin
+@param (int) pin number
+@param (int) value to be written
+@return void
+*/
 void analogWrite(int pinNum, int input);
+
+/**
+Reads the value of an analog pin
+@param (int) pin number
+@return (int) value read from pin
+*/
 int analogRead(int pinNum);
 
-//  attach/detach servo to/from a pin
+/**
+Attaches a servo to a pin
+@param (int) pin number
+@return void
+*/
 void servoAttach(int pinNum);
+
+/**
+Detaches a servo from a pin
+@param (int) pin number
+@return void
+*/
 void servoDetach(int pinNum);
 
-//  write/read values to/from a servo assigned pin
+/**
+Writes an angle value to a servo
+@param (int) pin number
+@param (int) angle value to write
+@return void
+*/
 void servoWrite(int pinNum, int input);
+
+/**
+Reads the value last written to a servo
+@param (int) pin number
+@return (int) angle value last written
+*/
 int servoRead(int pinNum);
