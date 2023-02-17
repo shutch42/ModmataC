@@ -25,7 +25,7 @@ Last Updated:
 
 #include "ModmataC.h"
 
-static void exit(int sig)
+static void safe_exit(int sig)
 {
     modbus_close(arduino);
     modbus_free(arduino);
@@ -78,8 +78,8 @@ int connectArduino(char *port, int baudRate, int id)
         modbus_free(arduino);
 	return 0;
     }
-    signal(SIGINT, exit);
-    signal(SIGTERM, exit);
+    signal(SIGINT, safe_exit);
+    signal(SIGTERM, safe_exit);
     return 1;
 }
 
@@ -224,3 +224,41 @@ int servoRead(int pinNum)
     //  return -1 if invalid pin
     return -1;
 }
+
+void wireWrite(uint8_t addr, uint8_t reg, uint8_t num_bytes, uint8_t *data) {
+	uint16_t wait_signal = 1;
+	do {
+		modbus_read_registers(arduino, 0, 1, &wait_signal);	
+	} while(wait_signal);
+
+	uint16_t *command = malloc(sizeof(uint16_t) * (4 + num_bytes));
+	command[0] = 100;
+	command[1] = 2 + num_bytes;
+	command[2] = addr;
+	command[3] = reg;
+	for (int i = 0; i < num_bytes; i++) {
+		command[4+i] = data[i];
+	}
+	modbus_write_registers(arduino, 0, 4 + num_bytes, command);
+}
+
+uint8_t* wireRead(uint8_t addr, uint8_t reg, int num_bytes) {
+	uint16_t wait_signal = 1;
+	do {
+		modbus_read_registers(arduino, 0, 1, &wait_signal);	
+	} while(wait_signal);
+	
+	uint16_t command[5] = {101, 3, addr, reg, num_bytes};
+	modbus_write_registers(arduino, 0, 5, command);
+
+	uint16_t *registers = malloc(sizeof(uint16_t) * num_bytes);
+	modbus_read_registers(arduino, 2, num_bytes, registers);
+	
+	uint8_t *result = malloc(sizeof(uint8_t) * num_bytes);
+	for(int i = 0; i < num_bytes; i++) {
+		result[i] = (uint8_t)registers[i];
+	}
+	
+	return result;
+}
+
