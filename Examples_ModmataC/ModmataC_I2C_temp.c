@@ -6,6 +6,8 @@ int main() {
 	// start serial connection with arduino, given a port, baud rate, and id
 	connectArduino("/dev/ttyACM0", 9600, 1);
 	printf("Arduino connected\n");
+	
+	wireBegin();
 
 	// Read in initial config settings
 	uint8_t *config = wireRead(THERMO_ADDR, 0xAC, 1);
