@@ -139,7 +139,7 @@ int digitalRead(int pinNum)
 
         //  read the value that should now be in address 3
         uint16_t dest;
-        modbus_read_registers(arduino, 3, 1, &dest);
+        modbus_read_registers(arduino, 2, 1, &dest);
 
         int value = dest;
 
@@ -179,7 +179,7 @@ int analogRead(int pinNum)
 
         //  read the value that should now be in address 3
         uint16_t dest;
-        modbus_read_registers(arduino, 3, 1, &dest);
+        modbus_read_registers(arduino, 2, 1, &dest);
 
         int value = dest;
 
