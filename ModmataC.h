@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <signal.h>
 #include <modbus.h>
 #include <errno.h>
@@ -15,6 +16,13 @@
 #define SERVODETACH 8
 #define SERVOWRITE 9
 #define SERVOREAD 10
+#define WIRE_BEGIN 11
+#define WIRE_BEGIN_TRANSMISSION 12
+#define WIRE_END_TRANSMISSION 13
+#define WIRE_WRITE 14
+#define WIRE_REQUEST 15
+#define WIRE_READ 16
+#define WIRE_AVAILABLE 17
 
 #define INPUT 0
 #define OUTPUT 1
@@ -29,7 +37,14 @@ handles SIGINT signal and disconnects modbus before exiting
 @param (int) signal
 @return void
 */
-static void exit(int signal);
+static void safe_exit(int signal);
+
+/**
+disconnect modbus connection if the program does not have an infinite loop
+@param none
+@return void
+*/
+void closeConnection();
 
 /**
 Causes the system to delay a number of miliseconds
@@ -120,3 +135,6 @@ Reads the value last written to a servo
 @return (int) angle value last written
 */
 int servoRead(int pinNum);
+
+void wireWrite(uint8_t addr, uint8_t reg, uint8_t num_bytes, uint8_t* data);
+uint8_t* wireRead(uint8_t addr, uint8_t reg, int num_bytes);
