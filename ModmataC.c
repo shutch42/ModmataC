@@ -13,6 +13,9 @@ Modmata (comm. protocol) repo:
 ModmataC (C library) repo:
     https://github.com/shutch42/ModmataC
 
+Modbus, might be useful for reference:
+    https://libmodbus.org/reference/
+
 Authors:
     Sam Hutcherson
     Iris Astrid
@@ -22,6 +25,14 @@ Last Updated:
     01/23/2023
 
 */
+
+/*
+a note on our modified modbus command[] format:
+        command[0]  = command value (1 for pinmode, 2 for digital write, etc)
+        command[1]  = num of arguments included in the command
+  command[3 ... n]  = command arguments
+*/
+
 
 #include "ModmataC.h"
 
@@ -89,9 +100,10 @@ void pinMode(int pinNum, int mode)
     //  check if pin number is valid
     if (isValidPin(pinNum))
     {
+        int numArgs = 2;
         //  set pin mode
-        uint16_t command[3] = {PINMODE, pinNum, mode};
-        modbus_write_registers(arduino, 0, 3, command);
+        uint16_t command[4] = {PINMODE, numArgs, pinNum, mode};
+        modbus_write_registers(arduino, 0, 4, command);
 
         //  TODO: make sure mode is valid
 
@@ -105,8 +117,9 @@ void digitalWrite(int pinNum, int input)
     //  ensures valid pin number and that input is either 0 (LOW) or 1 (HIGH)
     if (isValidPin(pinNum) && (input == 0 || input == 1))
     {
-        uint16_t command[3] = {DIGITALWRITE, pinNum, input};
-        modbus_write_registers(arduino, 0, 3, command);
+        int numArgs = 2;
+        uint16_t command[4] = {DIGITALWRITE, numArgs, pinNum, input};
+        modbus_write_registers(arduino, 0, 4, command);
     }
 
     return;
@@ -118,11 +131,13 @@ int digitalRead(int pinNum)
 
     if (isValidPin(pinNum))
     {
-        //  tell the arduino we're reading a value
-        uint16_t command[2] = {DIGITALREAD, pinNum};
-        modbus_write_registers(arduino, 0, 2, command);
+        int numArgs = 1;
 
-        //  read the value that should now be in address 2
+        //  tell the arduino we're reading a value
+        uint16_t command[3] = {DIGITALREAD, numArgs, pinNum};
+        modbus_write_registers(arduino, 0, 3, command);
+
+        //  read the value that should now be in address 3
         uint16_t dest;
         modbus_read_registers(arduino, 2, 1, &dest);
 
@@ -143,8 +158,9 @@ void analogWrite(int pinNum, int input)
     //  ensures valid pin number and input is between 0 and 255
     if (isValidPin(pinNum) && !(input < 0 || input > 255))
     {
-        uint16_t command[3] = {ANALOGWRITE, pinNum, input};
-        modbus_write_registers(arduino, 0, 3, command);
+        int numArgs = 2;
+        uint16_t command[4] = {ANALOGWRITE, numArgs, pinNum, input};
+        modbus_write_registers(arduino, 0, 4, command);
     }
 
     return;
@@ -155,11 +171,13 @@ int analogRead(int pinNum)
 {
     if (isValidPin(pinNum))
     {
-        //  tell the arduino we're reading a value
-        uint16_t command[2] = {ANALOGREAD, pinNum};
-        modbus_write_registers(arduino, 0, 2, command);
+        int numArgs = 1;
 
-        //  read the value that should now be in address 2
+        //  tell the arduino we're reading a value
+        uint16_t command[3] = {ANALOGREAD, numArgs, pinNum};
+        modbus_write_registers(arduino, 0, 3, command);
+
+        //  read the value that should now be in address 3
         uint16_t dest;
         modbus_read_registers(arduino, 2, 1, &dest);
 
@@ -176,16 +194,18 @@ int analogRead(int pinNum)
 //  TODO: add validation for pwm pin
 void servoAttach(int pinNum)
 {
-    uint16_t command[2] = {SERVOATTACH, pinNum};
-    modbus_write_registers(arduino, 0, 2, command);
+    int numArgs = 1;
+    uint16_t command[3] = {SERVOATTACH, numArgs, pinNum};
+    modbus_write_registers(arduino, 0, 3, command);
     return;
 }
 
 //  detach servo from a pin
 void servoDetach(int pinNum)
 {
-    uint16_t command[2] = {SERVODETACH, pinNum};
-    modbus_write_registers(arduino, 0, 2, command);
+    int numArgs = 1;
+    uint16_t command[3] = {SERVODETACH, numArgs, pinNum};
+    modbus_write_registers(arduino, 0, 3, command);
     return;
 }
 
@@ -196,8 +216,9 @@ void servoWrite(int pinNum, int input)
     //  ensures valid pin number and input is between 0 and 180
     if (isValidPin(pinNum) && !(input < 0 || input > 180))
     {
-        uint16_t command[3] = {SERVOWRITE, pinNum, input};
-        modbus_write_registers(arduino, 0, 3, command);
+        int numArgs = 2;
+        uint16_t command[4] = {SERVOWRITE, numArgs, pinNum, input};
+        modbus_write_registers(arduino, 0, 4, command);
     }
     return;
 }
@@ -208,13 +229,15 @@ int servoRead(int pinNum)
 {
     if (isValidPin(pinNum))
     {
+        int numArgs = 1;
+
         //  tell the arduino we're reading a value
-        uint16_t command[2] = {SERVOREAD, pinNum};
-        modbus_write_registers(arduino, 0, 2, command);
+        uint16_t command[3] = {SERVOREAD, numArgs, pinNum};
+        modbus_write_registers(arduino, 0, 3, command);
 
         //  read the value that should now be in address 2
         uint16_t dest;
-        modbus_read_registers(arduino, 2, 1, &dest);
+        modbus_read_registers(arduino, 3, 1, &dest);
 
         int value = dest;
 
@@ -232,7 +255,7 @@ void wireWrite(uint8_t addr, uint8_t reg, uint8_t num_bytes, uint8_t *data) {
 	} while(wait_signal);
 
 	uint16_t *command = malloc(sizeof(uint16_t) * (4 + num_bytes));
-	command[0] = 100;
+	command[0] = WIRE_WRITE;
 	command[1] = 2 + num_bytes;
 	command[2] = addr;
 	command[3] = reg;
@@ -248,7 +271,7 @@ uint8_t* wireRead(uint8_t addr, uint8_t reg, int num_bytes) {
 		modbus_read_registers(arduino, 0, 1, &wait_signal);	
 	} while(wait_signal);
 	
-	uint16_t command[5] = {101, 3, addr, reg, num_bytes};
+	uint16_t command[5] = {WIRE_READ, 3, addr, reg, num_bytes};
 	modbus_write_registers(arduino, 0, 5, command);
 
 	uint16_t *registers = malloc(sizeof(uint16_t) * num_bytes);
