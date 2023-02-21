@@ -248,14 +248,24 @@ int servoRead(int pinNum)
     return -1;
 }
 
-void wireWrite(uint8_t addr, uint8_t reg, uint8_t num_bytes, uint8_t *data) {
-	uint16_t wait_signal = 1;
-	do {
-		modbus_read_registers(arduino, 0, 1, &wait_signal);	
-	} while(wait_signal);
+void wireBegin() {
+	uint16_t command[2] = {WIREBEGIN, 0};
+	modbus_write_registers(arduino, 0, 2, command);
+}
 
+void wireEnd() {
+	uint16_t command[2] = {WIREEND, 0};
+	modbus_write_registers(arduino, 0, 2, command);
+}
+
+void wireSetClock(int clock_speed) {
+	uint16_t command[3] = {WIRECLOCK, 1, clock_speed};
+	modbus_write_registers(arduino, 0, 3, command);
+}
+
+void wireWrite(uint8_t addr, uint8_t reg, uint8_t num_bytes, uint8_t *data) {
 	uint16_t *command = malloc(sizeof(uint16_t) * (4 + num_bytes));
-	command[0] = WIRE_WRITE;
+	command[0] = WIREWRITE;
 	command[1] = 2 + num_bytes;
 	command[2] = addr;
 	command[3] = reg;
@@ -266,12 +276,7 @@ void wireWrite(uint8_t addr, uint8_t reg, uint8_t num_bytes, uint8_t *data) {
 }
 
 uint8_t* wireRead(uint8_t addr, uint8_t reg, int num_bytes) {
-	uint16_t wait_signal = 1;
-	do {
-		modbus_read_registers(arduino, 0, 1, &wait_signal);	
-	} while(wait_signal);
-	
-	uint16_t command[5] = {WIRE_READ, 3, addr, reg, num_bytes};
+	uint16_t command[5] = {WIREREAD, 3, addr, reg, num_bytes};
 	modbus_write_registers(arduino, 0, 5, command);
 
 	uint16_t *registers = malloc(sizeof(uint16_t) * num_bytes);

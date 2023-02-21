@@ -16,13 +16,11 @@
 #define SERVODETACH 8
 #define SERVOWRITE 9
 #define SERVOREAD 10
-#define WIRE_BEGIN 11
-#define WIRE_BEGIN_TRANSMISSION 12
-#define WIRE_END_TRANSMISSION 13
-#define WIRE_WRITE 14
-#define WIRE_REQUEST 15
-#define WIRE_READ 16
-#define WIRE_AVAILABLE 17
+#define WIREBEGIN 11
+#define WIREEND 12
+#define WIRECLOCK 13
+#define WIREWRITE 14
+#define WIREREAD 15
 
 #define INPUT 0
 #define OUTPUT 1
@@ -136,5 +134,8 @@ Reads the value last written to a servo
 */
 int servoRead(int pinNum);
 
+void wireBegin();
+void wireEnd();
+void wireSetClock();
 void wireWrite(uint8_t addr, uint8_t reg, uint8_t num_bytes, uint8_t* data);
 uint8_t* wireRead(uint8_t addr, uint8_t reg, int num_bytes);
