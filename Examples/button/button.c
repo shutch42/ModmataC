@@ -1,4 +1,4 @@
-#include "../ModmataC.h"
+#include "../../ModmataC.h"
 
 int main() {
 	connectArduino("/dev/ttyACM0", 9600, 1);
