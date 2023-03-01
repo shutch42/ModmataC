@@ -1,4 +1,5 @@
 #include "../../ModmataC.h"
+#include <ncurses.h>
 
 #define IRQ 8
 #define CE 9
@@ -12,11 +13,11 @@ void printReg(char* name, uint8_t reg, int num_bytes) {
 	}
 	uint8_t *read_buf = spiTransferBuf(CS, write_buf, num_bytes + 1);
 	
-	printf("%s: ", name);
+	printw("%s: ", name);
 	for(int i = 0; i < num_bytes; i++) {
-		printf("%02x ", read_buf[i+1]);
+		printw("%02x ", read_buf[i+1]);
 	}
-	printf("\n");
+	printw("\n");
 
 	free(write_buf);
 	free(read_buf);
@@ -235,7 +236,7 @@ void setReceiveMode(uint8_t my_addr, int debug) {
 
 int main() {
 	// start serial connection with arduino, given a port, baud rate, and id
-	connectArduino("/dev/ttyACM4", 9600, 1);
+	connectArduino("/dev/ttyACM0", 9600, 1);
 	
 	// Set up chip enable pins for SPI
 	pinMode(CS, OUTPUT);
@@ -246,24 +247,28 @@ int main() {
 	
 	// Start up SPI library
 	spiBegin();
+
+	// Start ncurses
+	initscr();
+	scrollok(stdscr, 1);
 	
 	// Set addresses for users
 	int my_addr = -1;
-	printf("Choose your device address (0-255): ");
-	scanf("%d", &my_addr);
+	printw("Choose your device address (0-255): ");
+	scanw("%d", &my_addr);
 	while (my_addr < 0 || my_addr > 255) {
-		printf("Invalid address!\n");
-		printf("Choose your device address (0-255): ");
-		scanf("%d", &my_addr);
+		printw("Invalid address!\n");
+		printw("Choose your device address (0-255): ");
+		scanw("%d", &my_addr);
 	}
 	
 	int their_addr = -1;
-	printf("Enter a device address to communicate with (0-255): ");
-	scanf("%d", &their_addr);
+	printw("Enter a device address to communicate with (0-255): ");
+	scanw("%d", &their_addr);
 	while(their_addr < 0 || their_addr > 255) {
-		printf("Invalid address!\n");
-		printf("Enter a device address to communicate with (0-255): ");
-		scanf("%d", &their_addr);
+		printw("Invalid address!\n");
+		printw("Enter a device address to communicate with (0-255): ");
+		scanw("%d", &their_addr);
 	}
 
 	// Power on the nrf24
@@ -277,19 +282,19 @@ int main() {
 	digitalWrite(CE, HIGH);
 	delayMicroseconds(140);
 	
+	
 	char str[33] = {0x00};
-	char *s = str;
-	size_t str_size = 32;
-	char c = getchar(); // Flush the Enter key
+	// char *s = str;
+	// size_t str_size = 32;
+	char c;
 	while(1) {
-		c = getchar();
+		// printReg("STATUS", 0x07, 1);
+		nodelay(stdscr, 1);
+		c = getch();
 		if (c == 0x0A) {
-			printf("> ");
-			getline(&s, &str_size, stdin);
-			// scanf("%s", str);
-
-			// Message Entered!
-			// Now let's send it
+			nodelay(stdscr, 0);
+			printw("> ");
+			getnstr(str, 32);
 			
 			// Switch to transmit mode
 			digitalWrite(CE, LOW);
@@ -320,24 +325,70 @@ int main() {
 			free(read_buf);
 			
 			// Wait for message to send (IRQ goes low)
-			// This is most likely not necessary on a Serial connection
 			while(digitalRead(IRQ));
 			
-			// printReg("STATUS", 0x07, 1);
+			// Check for ACK from receiver
+			wr_buf[0] = 0x07;
+			read_buf = spiTransferBuf(CS, wr_buf, 2);
+			if((read_buf[1] & 0x20) == 0x20) {
+				// printf("Message sent!\n");
+			}
+			else if ((read_buf[1] & 0x10) == 0x10) {
+				printw("No ACK received :(\n");
+			}
+			else {
+				printw("Unknown error: %02x\n", read_buf[1]);
+			}
+			free(read_buf);
 
-			// Clear RX FIFO again (idk if this is needed)
+			// Clear TX FIFO again
 			wr_buf[0] = 0xE1;
 			read_buf = spiTransferBuf(CS, wr_buf, 1);
+			free(read_buf);
 
 			// Switch back to receive mode
 			digitalWrite(CE, LOW);
 			setReceiveMode(my_addr, 0);
 			digitalWrite(CE, HIGH);
 			delayMicroseconds(140);
-
 		}
-		// getchar(); // Read dummy character
+			
+		// Check for received message
+		if (!digitalRead(IRQ)) {
+			// printf("Message available!\n");
+			uint8_t write_buf[33];
+			uint8_t *read_buf;
+			
+			// Flush TX FIFO
+			write_buf[0] = 0xE1;
+			read_buf = spiTransferBuf(CS, write_buf, 1);
+			free(read_buf);
+
+			// R_RX_PAYLOAD
+			printw("< ");
+			write_buf[0] = 0x61;
+			read_buf = spiTransferBuf(CS, write_buf, 33);
+			for (int i = 0; i < 32; i++) {
+				printw("%c", read_buf[i+1]);
+			}
+			printw("\n");
+			free(read_buf);
+
+			// Flush RX FIFO
+			write_buf[0] = 0xE2;
+			read_buf = spiTransferBuf(CS, write_buf, 1);
+			free(read_buf);
+
+			// Clear STATUS Register
+			write_buf[0] = 0x07 | 0x20;
+			write_buf[1] = 0x7E;
+			read_buf = spiTransferBuf(CS, write_buf, 2);
+			free(read_buf);
+		}
 	}
+	
+	// Close ncurses window	
+	endwin();
 
 	// Disconnect modmata
 	closeConnection();	
