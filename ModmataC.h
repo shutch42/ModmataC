@@ -21,6 +21,10 @@
 #define WIRECLOCK 13
 #define WIREWRITE 14
 #define WIREREAD 15
+#define SPIBEGIN 16
+#define SPISETTINGS 17
+#define SPITRANSFER 18
+#define SPIEND 19
 
 #define INPUT 0
 #define OUTPUT 1
@@ -46,10 +50,12 @@ void closeConnection();
 
 /**
 Causes the system to delay a number of miliseconds
-@param (int) miliseconds
+@param (int) milliseconds
 @return void
 */
-void delay(int ms);
+void delay(int millis);
+
+void delayMicroseconds(int micros);
 
 /**
 Determines if a given pin number is valid (valid pins are 1-30)
@@ -73,7 +79,7 @@ Sets the pin mode of a pin on the Arduino
 @param (int) mode to set pin to
 @return void
 */
-void pinMode(int pinNum, int mode);
+void pinMode(uint8_t pinNum, uint8_t mode);
 
 /**
 Writes a digital value (1 or 0) to a pin
@@ -81,14 +87,14 @@ Writes a digital value (1 or 0) to a pin
 @param (int) value to be written
 @return void
 */
-void digitalWrite(int pinNum, int input);
+void digitalWrite(uint8_t pinNum, uint8_t input);
 
 /**
 Reads the value of a digital pin
 @param (int) pin number
 @return (int) value read from pin
 */
-int digitalRead(int pinNum);
+int digitalRead(uint8_t pinNum);
 
 /**
 Writes an analog value to a pin
@@ -139,3 +145,6 @@ void wireEnd();
 void wireSetClock();
 void wireWrite(uint8_t addr, uint8_t reg, uint8_t num_bytes, uint8_t* data);
 uint8_t* wireRead(uint8_t addr, uint8_t reg, int num_bytes);
+
+void spiBegin();
+uint8_t* spiTransferBuf(int CS_pin, uint8_t *buf, uint8_t length);
