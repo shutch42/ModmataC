@@ -133,7 +133,6 @@ void digitalWrite(uint8_t pinNum, uint8_t input)
 //  reads the value of a digital pin
 int digitalRead(uint8_t pinNum)
 {
-
     if (isValidPin(pinNum))
     {
         uint8_t numArgs = 1;
@@ -316,7 +315,7 @@ uint8_t* spiTransferBuf(int CS_pin, uint8_t *buf, uint8_t length) {
 	}
 	modbus_write_registers(arduino, 0, 2 + length/2, command);
 
-	uint16_t *registers = malloc(sizeof(uint16_t) * length + 1 / 2);
+	uint16_t *registers = malloc(sizeof(uint16_t) * (length + 1) / 2);
 	modbus_read_registers(arduino, 1, (length + 1) / 2, registers);
 	
 	uint8_t *result = malloc(sizeof(uint8_t) * length);
