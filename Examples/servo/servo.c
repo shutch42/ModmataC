@@ -1,4 +1,4 @@
-#include "../ModmataC.h"
+#include "../../ModmataC.h"
 #include <stdlib.h>
 
 int main() {

@@ -49,10 +49,15 @@ void closeConnection() {
     modbus_free(arduino);
 }
 
-void delay(int ms)
+void delay(int millis)
 {
    clock_t start_time = clock();
-   while(clock() < start_time + ms*1000);
+   while(clock() < start_time + millis*1000);
+}
+
+void delayMicroseconds(int micros) {
+   clock_t start_time = clock();
+   while(clock() < start_time + micros);
 }
 
 //  checks if a pin is valid, based on the
@@ -95,15 +100,15 @@ int connectArduino(char *port, int baudRate, int id)
 }
 
 // sets pin mode
-void pinMode(int pinNum, int mode)
+void pinMode(uint8_t pinNum, uint8_t mode)
 {
     //  check if pin number is valid
     if (isValidPin(pinNum))
     {
-        int numArgs = 2;
+        uint8_t numArgs = 2;
         //  set pin mode
-        uint16_t command[4] = {PINMODE, numArgs, pinNum, mode};
-        modbus_write_registers(arduino, 0, 4, command);
+        uint16_t command[2] = {(PINMODE << 8) | numArgs, (pinNum << 8) | mode};
+        modbus_write_registers(arduino, 0, 2, command);
 
         //  TODO: make sure mode is valid
 
@@ -112,36 +117,35 @@ void pinMode(int pinNum, int mode)
 }
 
 //  writes a HIGH or LOW value to a digital pin
-void digitalWrite(int pinNum, int input)
+void digitalWrite(uint8_t pinNum, uint8_t input)
 {
     //  ensures valid pin number and that input is either 0 (LOW) or 1 (HIGH)
     if (isValidPin(pinNum) && (input == 0 || input == 1))
     {
-        int numArgs = 2;
-        uint16_t command[4] = {DIGITALWRITE, numArgs, pinNum, input};
-        modbus_write_registers(arduino, 0, 4, command);
+        uint8_t numArgs = 2;
+        uint16_t command[2] = {(DIGITALWRITE << 8) | numArgs, (pinNum << 8) | input};
+        modbus_write_registers(arduino, 0, 2, command);
     }
 
     return;
 }
 
 //  reads the value of a digital pin
-int digitalRead(int pinNum)
+int digitalRead(uint8_t pinNum)
 {
-
     if (isValidPin(pinNum))
     {
-        int numArgs = 1;
+        uint8_t numArgs = 1;
 
         //  tell the arduino we're reading a value
-        uint16_t command[3] = {DIGITALREAD, numArgs, pinNum};
-        modbus_write_registers(arduino, 0, 3, command);
+        uint16_t command[2] = {(DIGITALREAD << 8) | numArgs, pinNum << 8};
+        modbus_write_registers(arduino, 0, 2, command);
 
-        //  read the value that should now be in address 3
+        //  read the value that should now be in register 2
         uint16_t dest;
-        modbus_read_registers(arduino, 2, 1, &dest);
+        modbus_read_registers(arduino, 1, 1, &dest);
 
-        int value = dest;
+        int value = dest >> 8;
 
         return value;
     }
@@ -286,7 +290,46 @@ uint8_t* wireRead(uint8_t addr, uint8_t reg, int num_bytes) {
 	for(int i = 0; i < num_bytes; i++) {
 		result[i] = (uint8_t)registers[i];
 	}
-	
+
+	free(registers);
+
 	return result;
+}
+
+void spiBegin() {
+	uint16_t command[1] = {SPIBEGIN << 8};
+	modbus_write_registers(arduino, 0, 1, command);
+}
+
+uint8_t* spiTransferBuf(int CS_pin, uint8_t *buf, uint8_t length) {
+	uint16_t *command = malloc(sizeof(uint16_t) * (2 + length/2));
+	command[0] = (SPITRANSFER << 8) | (length + 1);
+	command[1] = CS_pin << 8;
+	for (int i = 0; i < length; i++) {
+		if (i % 2 == 0) {
+			command[(i+1)/2 + 1] |= buf[i];
+		}
+		else {
+			command[(i+1)/2 + 1] = buf[i] << 8;
+		}
+	}
+	modbus_write_registers(arduino, 0, 2 + length/2, command);
+
+	uint16_t *registers = malloc(sizeof(uint16_t) * (length + 1) / 2);
+	modbus_read_registers(arduino, 1, (length + 1) / 2, registers);
+	
+	uint8_t *result = malloc(sizeof(uint8_t) * length);
+	for(int i = 0; i < length; i++) {
+		if (i % 2 == 0) {
+			result[i] = registers[i/2] >> 8;
+		}
+		else {
+			result[i] = registers[i/2] & 0x00ff;
+		}
+	}
+
+	free(registers);
+
+	return result;	
 }
 

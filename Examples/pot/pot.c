@@ -1,4 +1,4 @@
-#include "../ModmataC.h"
+#include "../../ModmataC.h"
 
 int main() {
 	//	start serial connection with arduino, given a port and baud rate

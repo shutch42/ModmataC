@@ -1,5 +1,5 @@
 #include <math.h>
-#include "../ModmataC.h"
+#include "../../ModmataC.h"
 #define THERMO_ADDR 0X4D
 
 int main() {
