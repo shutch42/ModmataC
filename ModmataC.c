@@ -155,39 +155,36 @@ int digitalRead(uint8_t pinNum)
 }
 
 //  writes an analog value (PWM wave, 0-255) to a pin
-void analogWrite(int pinNum, int input)
+void analogWrite(uint8_t pinNum, uint16_t input)
 {
     //  TODO: make sure pin is also analog pin
 
     //  ensures valid pin number and input is between 0 and 255
     if (isValidPin(pinNum) && !(input < 0 || input > 255))
     {
-        int numArgs = 2;
-        uint16_t command[4] = {ANALOGWRITE, numArgs, pinNum, input};
-        modbus_write_registers(arduino, 0, 4, command);
+        uint8_t numArgs = 3;
+        uint16_t command[3] = {ANALOGWRITE << 8 | numArgs, pinNum << 8 | input >> 8, input << 8};
+        modbus_write_registers(arduino, 0, 3, command);
     }
 
     return;
 }
 
 // reads the value of an analog (PWM) pin
-int analogRead(int pinNum)
+int analogRead(uint16_t pinNum)
 {
     if (isValidPin(pinNum))
     {
-        int numArgs = 1;
+        uint8_t numArgs = 1;
 
         //  tell the arduino we're reading a value
-        uint16_t command[3] = {ANALOGREAD, numArgs, pinNum};
-        modbus_write_registers(arduino, 0, 3, command);
+        uint16_t command[2] = {ANALOGREAD << 8 | numArgs, pinNum << 8};
+        modbus_write_registers(arduino, 0, 2, command);
 
-        //  read the value that should now be in address 3
+        //  read the value that should now be in address 2
         uint16_t dest;
-        modbus_read_registers(arduino, 2, 1, &dest);
-
-        int value = dest;
-
-        return value;
+        modbus_read_registers(arduino, 1, 1, &dest);
+        return dest;
     }
 
     //  return -1 if invalid pin
@@ -196,54 +193,54 @@ int analogRead(int pinNum)
 
 //  attach servo to a pin
 //  TODO: add validation for pwm pin
-void servoAttach(int pinNum)
+void servoAttach(uint16_t pinNum)
 {
-    int numArgs = 1;
-    uint16_t command[3] = {SERVOATTACH, numArgs, pinNum};
-    modbus_write_registers(arduino, 0, 3, command);
+    uint8_t numArgs = 1;
+    uint16_t command[2] = {SERVOATTACH << 8 | numArgs, pinNum << 8};
+    modbus_write_registers(arduino, 0, 2, command);
     return;
 }
 
 //  detach servo from a pin
-void servoDetach(int pinNum)
+void servoDetach(uint16_t pinNum)
 {
-    int numArgs = 1;
-    uint16_t command[3] = {SERVODETACH, numArgs, pinNum};
-    modbus_write_registers(arduino, 0, 3, command);
+    uint8_t numArgs = 1;
+    uint16_t command[2] = {SERVODETACH << 8 | numArgs, pinNum << 8};
+    modbus_write_registers(arduino, 0, 2, command);
     return;
 }
 
 //  write/read values to/from a servo assigned pin
 //  TODO: add validation for pwm pin
-void servoWrite(int pinNum, int input)
+void servoWrite(uint16_t pinNum, uint16_t input)
 {
     //  ensures valid pin number and input is between 0 and 180
     if (isValidPin(pinNum) && !(input < 0 || input > 180))
     {
-        int numArgs = 2;
-        uint16_t command[4] = {SERVOWRITE, numArgs, pinNum, input};
-        modbus_write_registers(arduino, 0, 4, command);
+        uint8_t numArgs = 2;
+        uint16_t command[2] = {SERVOWRITE << 8 | numArgs, pinNum << 8 | input};
+        modbus_write_registers(arduino, 0, 2, command);
     }
     return;
 }
 
 //  read value from a servo assigned pin
 //  returns 0 if fails
-int servoRead(int pinNum)
+int servoRead(uint16_t pinNum)
 {
     if (isValidPin(pinNum))
     {
-        int numArgs = 1;
+        uint8_t numArgs = 1;
 
         //  tell the arduino we're reading a value
-        uint16_t command[3] = {SERVOREAD, numArgs, pinNum};
-        modbus_write_registers(arduino, 0, 3, command);
+        uint16_t command[2] = {SERVOREAD << 8 | numArgs, pinNum << 8};
+        modbus_write_registers(arduino, 0, 2, command);
 
         //  read the value that should now be in address 2
         uint16_t dest;
-        modbus_read_registers(arduino, 3, 1, &dest);
+        modbus_read_registers(arduino, 1, 1, &dest);
 
-        int value = dest;
+        int value = dest >> 8;
 
         return value;
     }
@@ -253,42 +250,51 @@ int servoRead(int pinNum)
 }
 
 void wireBegin() {
-	uint16_t command[2] = {WIREBEGIN, 0};
-	modbus_write_registers(arduino, 0, 2, command);
+	uint16_t command[1] = {WIREBEGIN << 8 | 0};
+	modbus_write_registers(arduino, 0, 1, command);
 }
 
 void wireEnd() {
-	uint16_t command[2] = {WIREEND, 0};
-	modbus_write_registers(arduino, 0, 2, command);
+	uint16_t command[1] = {WIREEND << 8 | 0};
+	modbus_write_registers(arduino, 0, 1, command);
 }
 
+// FIXME
 void wireSetClock(int clock_speed) {
 	uint16_t command[3] = {WIRECLOCK, 1, clock_speed};
 	modbus_write_registers(arduino, 0, 3, command);
 }
 
 void wireWrite(uint8_t addr, uint8_t reg, uint8_t num_bytes, uint8_t *data) {
-	uint16_t *command = malloc(sizeof(uint16_t) * (4 + num_bytes));
-	command[0] = WIREWRITE;
-	command[1] = 2 + num_bytes;
-	command[2] = addr;
-	command[3] = reg;
+	uint16_t *command = malloc(sizeof(uint16_t) * (2 + (num_bytes+1)/2));
+	command[0] = WIREWRITE << 8 | 2 + num_bytes;
+	command[1] = addr << 8 | reg;
 	for (int i = 0; i < num_bytes; i++) {
-		command[4+i] = data[i];
+		if(i % 2 == 0) {
+			command[2+i] = data[i] << 8;
+		}
+		else {
+			command[2+i] |= data[i];
+		}
 	}
-	modbus_write_registers(arduino, 0, 4 + num_bytes, command);
+	modbus_write_registers(arduino, 0, 2 + (num_bytes+1)/2, command);
 }
 
 uint8_t* wireRead(uint8_t addr, uint8_t reg, int num_bytes) {
-	uint16_t command[5] = {WIREREAD, 3, addr, reg, num_bytes};
-	modbus_write_registers(arduino, 0, 5, command);
+	uint16_t command[3] = {WIREREAD << 8 | 3, addr << 8 | reg, num_bytes << 8};
+	modbus_write_registers(arduino, 0, 3, command);
 
-	uint16_t *registers = malloc(sizeof(uint16_t) * num_bytes);
-	modbus_read_registers(arduino, 2, num_bytes, registers);
+	uint16_t *registers = malloc(sizeof(uint16_t) * (num_bytes+1)/2);
+	modbus_read_registers(arduino, 1, (num_bytes+1)/2, registers);
 	
 	uint8_t *result = malloc(sizeof(uint8_t) * num_bytes);
 	for(int i = 0; i < num_bytes; i++) {
-		result[i] = (uint8_t)registers[i];
+		if(i % 2 == 0) {
+			result[i] = registers[i] >> 8;
+		}
+		else {
+			result[i] = registers[i] & 0x00ff;
+		}
 	}
 
 	free(registers);
@@ -332,4 +338,14 @@ uint8_t* spiTransferBuf(int CS_pin, uint8_t *buf, uint8_t length) {
 
 	return result;	
 }
+
+void spiSettings(int speed, int order, int mode) {
+	// FIXME
+}
+
+void spiEnd() {
+	uint16_t command[1] = {SPIEND << 9};
+	modbus_write_registers(arduino, 0, 1, command);
+}
+
 

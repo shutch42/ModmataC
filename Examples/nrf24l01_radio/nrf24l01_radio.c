@@ -315,7 +315,7 @@ int main() {
 			wr_buf[0] = 0xE2;
 			read_buf = spiTransferBuf(CS, wr_buf, 1);
 			free(read_buf);
-
+			
 			// Queue up the message
 			wr_buf[0] = 0xA0;
 			for (int i = 0; str[i] != 0x00; i++) { // This should work right?
@@ -327,6 +327,7 @@ int main() {
 			// Wait for message to send (IRQ goes low)
 			while(digitalRead(IRQ));
 			
+			/*
 			// Check for ACK from receiver
 			wr_buf[0] = 0x07;
 			read_buf = spiTransferBuf(CS, wr_buf, 2);
@@ -340,6 +341,7 @@ int main() {
 				printw("Unknown error: %02x\n", read_buf[1]);
 			}
 			free(read_buf);
+			*/
 
 			// Clear TX FIFO again
 			wr_buf[0] = 0xE1;

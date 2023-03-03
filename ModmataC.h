@@ -102,28 +102,28 @@ Writes an analog value to a pin
 @param (int) value to be written
 @return void
 */
-void analogWrite(int pinNum, int input);
+void analogWrite(uint8_t pinNum, uint16_t input);
 
 /**
 Reads the value of an analog pin
 @param (int) pin number
 @return (int) value read from pin
 */
-int analogRead(int pinNum);
+int analogRead(uint16_t pinNum);
 
 /**
 Attaches a servo to a pin
 @param (int) pin number
 @return void
 */
-void servoAttach(int pinNum);
+void servoAttach(uint16_t pinNum);
 
 /**
 Detaches a servo from a pin
 @param (int) pin number
 @return void
 */
-void servoDetach(int pinNum);
+void servoDetach(uint16_t pinNum);
 
 /**
 Writes an angle value to a servo
@@ -131,14 +131,14 @@ Writes an angle value to a servo
 @param (int) angle value to write
 @return void
 */
-void servoWrite(int pinNum, int input);
+void servoWrite(uint16_t pinNum, uint16_t input);
 
 /**
 Reads the value last written to a servo
 @param (int) pin number
 @return (int) angle value last written
 */
-int servoRead(int pinNum);
+int servoRead(uint16_t pinNum);
 
 void wireBegin();
 void wireEnd();

@@ -7,7 +7,7 @@ int main() {
     	pinMode(13, OUTPUT);
 	int value = -1;
     	int led_state = LOW;
-
+	
 	while(1) {
 		value = digitalRead(7);
         	if(value && !led_state) {
@@ -20,4 +20,5 @@ int main() {
         	}
         	printf("%i\n", value);
 	}
+	
 }
