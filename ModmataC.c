@@ -339,3 +339,13 @@ uint8_t* spiTransferBuf(int CS_pin, uint8_t *buf, uint8_t length) {
 	return result;	
 }
 
+void spiSettings(int speed, int order, int mode) {
+	// FIXME
+}
+
+void spiEnd() {
+	uint16_t command[1] = {SPIEND << 9};
+	modbus_write_registers(arduino, 0, 1, command);
+}
+
+
