@@ -344,7 +344,7 @@ void spiSettings(int speed, int order, int mode) {
 }
 
 void spiEnd() {
-	uint16_t command[1] = {SPIEND << 9};
+	uint16_t command[1] = {SPIEND << 8};
 	modbus_write_registers(arduino, 0, 1, command);
 }
 
