@@ -259,9 +259,8 @@ void wireEnd() {
 	modbus_write_registers(arduino, 0, 1, command);
 }
 
-// FIXME
-void wireSetClock(int clock_speed) {
-	uint16_t command[3] = {WIRECLOCK, 1, clock_speed};
+void wireSetClock(uint32_t clock_speed) {
+	uint16_t command[3] = {WIRECLOCK << 8 | 4, clock_speed >> 16, clock_speed & 0x0000ffff};
 	modbus_write_registers(arduino, 0, 3, command);
 }
 
@@ -339,13 +338,13 @@ uint8_t* spiTransferBuf(int CS_pin, uint8_t *buf, uint8_t length) {
 	return result;	
 }
 
-void spiSettings(int speed, int order, int mode) {
-	// FIXME
+void spiSettings(uint32_t speed, uint8_t order, uint8_t mode) {
+	uint16_t command[4] = {SPISETTINGS << 8 | 6, speed >> 16, speed & 0x0000ffff, order << 8 | mode};
+	modbus_write_registers(arduino, 0, 4, command);
 }
 
 void spiEnd() {
 	uint16_t command[1] = {SPIEND << 8};
 	modbus_write_registers(arduino, 0, 1, command);
 }
-
 
