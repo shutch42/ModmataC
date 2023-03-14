@@ -148,11 +148,44 @@ Reads the value last written to a servo
 */
 int servoRead(uint16_t pinNum);
 
+/**
+Begins an I2C connection
+@return (void)
+*/
 void wireBegin();
+
+/**
+Terminates an I2C connection
+@return (void)
+*/
 void wireEnd();
-void wireSetClock();
+
+/**
+Sets I2C clock speed
+@param (int) clock speed
+@return (void)
+*/
+void wireSetClock(uint32_t);
+
+/**
+Writes data over an I2C connection
+@param (uint8_t) address byte
+@param (uint8_t) register byte
+@param (uint8_t) number of bytes to be written following the address and register
+@param (uint8_t*) array of bytes being written
+@return (void)
+*/
 void wireWrite(uint8_t addr, uint8_t reg, uint8_t num_bytes, uint8_t* data);
+
+/**
+Reads data from an I2C connection
+@param (uint8_t) address byte
+@param (uint8_t) register byte
+@param (uint8_t) number of bytes to read
+@return (uint8_t*) array of bytes that were read
+*/
 uint8_t* wireRead(uint8_t addr, uint8_t reg, int num_bytes);
+
 
 void spiBegin();
 uint8_t* spiTransferBuf(int CS_pin, uint8_t *buf, uint8_t length);
