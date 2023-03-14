@@ -32,6 +32,14 @@
 #define LOW 0
 #define HIGH 1
 
+#define LSBFIRST 0
+#define MSBFIRST 1
+
+#define SPI_MODE0 0x00
+#define SPI_MODE1 0x04
+#define SPI_MODE2 0x08
+#define SPI_MODE3 0x0C
+
 static modbus_t* arduino;
 
 /**
@@ -148,3 +156,6 @@ uint8_t* wireRead(uint8_t addr, uint8_t reg, int num_bytes);
 
 void spiBegin();
 uint8_t* spiTransferBuf(int CS_pin, uint8_t *buf, uint8_t length);
+void spiSettings(uint32_t speed, uint8_t order, uint8_t mode);
+void spiEnd();
+
