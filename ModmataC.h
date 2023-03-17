@@ -186,9 +186,33 @@ Reads data from an I2C connection
 */
 uint8_t* wireRead(uint8_t addr, uint8_t reg, int num_bytes);
 
-
+/**
+Begins SPI communication with default settings (4 Mbps, MSBFIRST, SPI_MODE0)
+@return (void)
+*/
 void spiBegin();
+
+/**
+Transfer an array of bytes over SPI
+@param (int) Chip Select pin number
+@param (uint8_t*) Array of bytes to transfer over MOSI
+@param (uint8_t) Array length
+@return (uint8_t*) Array of bytes sent back over MISO
+*/
 uint8_t* spiTransferBuf(int CS_pin, uint8_t *buf, uint8_t length);
+
+/**
+Set specific SPI settings such as communication speed, bit order, and mode
+@param (uint32_t) Communication speed
+@param (uint8_t) bit order (MSBFIRST or LSBFIRST)
+@param (uint8_t) data mode (SPI_MODE0, SPI_MODE1, SPI_MODE2, or SPI_MODE3)
+@return (void)
+*/
 void spiSettings(uint32_t speed, uint8_t order, uint8_t mode);
+
+/**
+End SPI communication
+@return (void)
+*/
 void spiEnd();
 
