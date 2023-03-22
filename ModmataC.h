@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
-#include <modbus.h>
 #include <errno.h>
 #include <time.h>
+
+#include "modbus/modbus.h"
 
 #define IDLE 0
 #define PINMODE 1

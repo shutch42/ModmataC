@@ -1,2 +1,2 @@
 all:
-	gcc blink.c ../../ModmataC.c -lm `pkg-config --cflags --libs libmodbus`
+	gcc blink.c -lModmataC -lmodbus -o blink

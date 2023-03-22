@@ -332,7 +332,7 @@ Writes data over an I2C connection
 */
 void wireWrite(uint8_t addr, uint8_t reg, uint8_t num_bytes, uint8_t *data) {
 	uint16_t *command = malloc(sizeof(uint16_t) * (2 + (num_bytes+1)/2));
-	command[0] = WIREWRITE << 8 | 2 + num_bytes;
+	command[0] = WIREWRITE << 8 | (2 + num_bytes);
 	command[1] = addr << 8 | reg;
 	for (int i = 0; i < num_bytes; i++) {
 		if(i % 2 == 0) {
