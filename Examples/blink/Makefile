@@ -1,2 +1,2 @@
 all:
-	gcc blink.c -lModmataC -lmodbus -o blink
+	gcc blink.c -lModmataC -o blink
