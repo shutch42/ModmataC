@@ -217,3 +217,5 @@ End SPI communication
 */
 void spiEnd();
 
+void transmitRegisters(uint8_t fn_code, uint8_t argc, uint8_t* argv);
+

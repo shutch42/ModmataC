@@ -58,6 +58,7 @@ void delayMicroseconds(int micros) {
    while(clock() < start_time + micros);
 }
 
+
 /**
 Checks if a pin number is valid
 The leonardo has pins 1-30
@@ -420,5 +421,25 @@ void spiSettings(uint32_t speed, uint8_t order, uint8_t mode) {
 void spiEnd() {
 	uint16_t command[1] = {SPIEND << 8};
 	modbus_write_registers(arduino, 0, 1, command);
+}
+
+void transmitRegisters(uint8_t fn_code, uint8_t argc, uint8_t* argv) {
+	uint16_t *command = malloc(sizeof(uint16_t) * 1+(argc+1)/2);
+	command[0] = fn_code << 8 | argc;
+	for(int i = 0; i < argc; i++) {
+		if(i % 2 == 0) {
+			command[1+i/2] = argv[i] << 8;
+		}
+		else {
+			command[1+i/2] |= argv[i];
+		}
+	}
+	uint16_t working;
+	do {
+	modbus_read_registers(arduino, 0, 1, &working);
+	} while(working > 0);
+
+	modbus_write_registers(arduino, 0, 1 + (argc+1)/2, command);
+	free(command);
 }
 
