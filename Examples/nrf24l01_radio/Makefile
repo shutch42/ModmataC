@@ -1,2 +1,2 @@
 all:
-	gcc nrf24l01_radio.c ../../ModmataC.c -lncurses -lm `pkg-config --cflags --libs libmodbus`
+	gcc nrf24l01_radio.c -lModmataC -lncurses -o radio

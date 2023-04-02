@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
-#include <modbus.h>
 #include <errno.h>
 #include <time.h>
+
+#include "modbus/modbus.h"
 
 #define IDLE 0
 #define PINMODE 1
@@ -31,6 +32,14 @@
 
 #define LOW 0
 #define HIGH 1
+
+#define LSBFIRST 0
+#define MSBFIRST 1
+
+#define SPI_MODE0 0x00
+#define SPI_MODE1 0x04
+#define SPI_MODE2 0x08
+#define SPI_MODE3 0x0C
 
 static modbus_t* arduino;
 
@@ -140,11 +149,73 @@ Reads the value last written to a servo
 */
 int servoRead(uint16_t pinNum);
 
+/**
+Begins an I2C connection
+@return (void)
+*/
 void wireBegin();
+
+/**
+Terminates an I2C connection
+@return (void)
+*/
 void wireEnd();
-void wireSetClock();
+
+/**
+Sets I2C clock speed
+@param (int) clock speed
+@return (void)
+*/
+void wireSetClock(uint32_t);
+
+/**
+Writes data over an I2C connection
+@param (uint8_t) address byte
+@param (uint8_t) register byte
+@param (uint8_t) number of bytes to be written following the address and register
+@param (uint8_t*) array of bytes being written
+@return (void)
+*/
 void wireWrite(uint8_t addr, uint8_t reg, uint8_t num_bytes, uint8_t* data);
+
+/**
+Reads data from an I2C connection
+@param (uint8_t) address byte
+@param (uint8_t) register byte
+@param (uint8_t) number of bytes to read
+@return (uint8_t*) array of bytes that were read
+*/
 uint8_t* wireRead(uint8_t addr, uint8_t reg, int num_bytes);
 
+/**
+Begins SPI communication with default settings (4 Mbps, MSBFIRST, SPI_MODE0)
+@return (void)
+*/
 void spiBegin();
+
+/**
+Transfer an array of bytes over SPI
+@param (int) Chip Select pin number
+@param (uint8_t*) Array of bytes to transfer over MOSI
+@param (uint8_t) Array length
+@return (uint8_t*) Array of bytes sent back over MISO
+*/
 uint8_t* spiTransferBuf(int CS_pin, uint8_t *buf, uint8_t length);
+
+/**
+Set specific SPI settings such as communication speed, bit order, and mode
+@param (uint32_t) Communication speed
+@param (uint8_t) bit order (MSBFIRST or LSBFIRST)
+@param (uint8_t) data mode (SPI_MODE0, SPI_MODE1, SPI_MODE2, or SPI_MODE3)
+@return (void)
+*/
+void spiSettings(uint32_t speed, uint8_t order, uint8_t mode);
+
+/**
+End SPI communication
+@return (void)
+*/
+void spiEnd();
+
+void transmitRegisters(uint8_t fn_code, uint8_t argc, uint8_t* argv);
+

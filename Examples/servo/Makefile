@@ -1,2 +1,2 @@
 all:
-	gcc servo.c ../../ModmataC.c -lm `pkg-config --cflags --libs libmodbus`
+	gcc servo.c -lModmataC -o servo

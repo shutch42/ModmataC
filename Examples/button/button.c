@@ -1,7 +1,7 @@
-#include "../../ModmataC.h"
+#include <ModmataC.h>
 
 int main() {
-	connectArduino("/dev/ttyACM0", 9600, 1);
+	connectArduino("/dev/ttyACM0", 115200, 1);
 		
 	pinMode(7, INPUT);
     	pinMode(13, OUTPUT);
