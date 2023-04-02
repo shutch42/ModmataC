@@ -1,9 +1,8 @@
-#include "../../ModmataC.h"
-#include <stdlib.h>
+#include "ModmataC.h"
 
 int main() {
 	//	start serial connection with arduino, given a port and baud rate
-	connectArduino("/dev/ttyACM0", 9600, 1);
+	connectArduino("/dev/ttyACM0", 115200, 1);
 	
 	servoAttach(6);
 	delay(1000);

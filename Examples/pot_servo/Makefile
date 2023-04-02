@@ -1,2 +1,2 @@
 all:
-	gcc pot_servo.c ../../ModmataC.c -lm `pkg-config --cflags --libs libmodbus`
+	gcc pot_servo.c -lModmataC -o pot_servo

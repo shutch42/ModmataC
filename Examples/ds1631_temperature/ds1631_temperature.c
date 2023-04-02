@@ -1,10 +1,10 @@
 #include <math.h>
-#include "../../ModmataC.h"
+#include <ModmataC.h>
 #define THERMO_ADDR 0X4D
 
 int main() {
 	// start serial connection with arduino, given a port, baud rate, and id
-	connectArduino("/dev/ttyACM0", 9600, 1);
+	connectArduino("/dev/ttyACM0", 115200, 1);
 	printf("Arduino connected\n");
 	
 	wireBegin();

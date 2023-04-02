@@ -19,7 +19,7 @@ void lcdClear() {
 }
 
 int main() {
-	connectArduino("/dev/ttyACM2", 9600, 1);	
+	connectArduino("/dev/ttyACM0", 115200, 1);	
 	
 	while(1) {
 		char str[80];
