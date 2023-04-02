@@ -2,7 +2,7 @@
 
 int main() {
 	// start serial connection with arduino, given a port, baud rate, and id
-	connectArduino("/dev/ttyACM1", 9600, 1);
+	connectArduino("/dev/ttyACM0", 115200, 1);
 
 	// Set mode of pin 13 to OUTPUT
 	pinMode(13, OUTPUT);

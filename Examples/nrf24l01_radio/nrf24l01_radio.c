@@ -1,4 +1,4 @@
-#include "../../ModmataC.h"
+#include <ModmataC.h>
 #include <ncurses.h>
 
 #define IRQ 8
@@ -236,7 +236,7 @@ void setReceiveMode(uint8_t my_addr, int debug) {
 
 int main() {
 	// start serial connection with arduino, given a port, baud rate, and id
-	connectArduino("/dev/ttyACM0", 9600, 1);
+	connectArduino("/dev/ttyACM0", 115200, 1);
 	
 	// Set up chip enable pins for SPI
 	pinMode(CS, OUTPUT);

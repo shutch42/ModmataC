@@ -1,8 +1,8 @@
-#include "../../ModmataC.h"
+#include <ModmataC.h>
 
 int main() {
     // start serial connection with arduino, given a port and baud rate
-    connectArduino("/dev/ttyACM0", 9600, 1);
+    connectArduino("/dev/ttyACM0", 115200, 1);
    
     int value = -1;
     int led_val = 0;
