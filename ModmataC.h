@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
-#include <modbus.h>
 #include <errno.h>
 #include <time.h>
+
+#include "modbus/modbus.h"
 
 #define IDLE 0
 #define PINMODE 1
@@ -215,4 +216,6 @@ End SPI communication
 @return (void)
 */
 void spiEnd();
+
+void transmitRegisters(uint8_t fn_code, uint8_t argc, uint8_t* argv);
 
