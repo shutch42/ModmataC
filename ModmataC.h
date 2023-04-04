@@ -1,3 +1,6 @@
+#ifndef MODMATA_H
+#define MODMATA_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -219,3 +222,4 @@ void spiEnd();
 
 void transmitRegisters(uint8_t fn_code, uint8_t argc, uint8_t* argv);
 
+#endif
