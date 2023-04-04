@@ -68,7 +68,7 @@ The leonardo has pins 1-30
 int isValidPin(int pinNum)
 {
     //  check if pin number is valid
-    if (pinNum < 1 || pinNum > 30)
+    if (pinNum < 0 || pinNum > 30)
     {
         printf("invalid pin number\n");
         return 0;
