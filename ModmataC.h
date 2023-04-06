@@ -1,3 +1,9 @@
+/*
+ModmataC
+Copyright © char* teamName <shutche@siue.edu>
+Licensed under LGPL-2.1
+*/
+
 #ifndef MODMATA_H
 #define MODMATA_H
 
