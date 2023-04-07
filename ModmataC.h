@@ -1,6 +1,6 @@
 /*
 ModmataC
-Copyright © char* teamName <shutche@siue.edu>
+Copyright © 2023 char* teamName <shutche@siue.edu>
 Licensed under LGPL-2.1
 */
 
