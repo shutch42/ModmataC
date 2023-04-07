@@ -1,0 +1,455 @@
+\hypertarget{ModmataC_8c}{}\doxysection{Modmata\+C.\+c File Reference}
+\label{ModmataC_8c}\index{ModmataC.c@{ModmataC.c}}
+{\ttfamily \#include \char`\"{}Modmata\+C.\+h\char`\"{}}\newline
+Include dependency graph for Modmata\+C.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{ModmataC_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{ModmataC_8c_aaf912c696192e6a13eb70526891b4cd2}{close\+Connection}} ()
+\item 
+void \mbox{\hyperlink{ModmataC_8c_ac0fed4fb18bece58c851f7d76f8ebe38}{delay}} (int millis)
+\item 
+void \mbox{\hyperlink{ModmataC_8c_a1669135cd39f5cf5b4d98888b5ef6c80}{delay\+Microseconds}} (int micros)
+\item 
+int \mbox{\hyperlink{ModmataC_8c_a4559b9a011fce8a7189d49e81484efd9}{is\+Valid\+Pin}} (int pin\+Num)
+\item 
+int \mbox{\hyperlink{ModmataC_8c_a1bf4e4b24163ed99bc92c833adc79dbf}{connect\+Arduino}} (char $\ast$port, int baud\+Rate, int id)
+\item 
+void \mbox{\hyperlink{ModmataC_8c_a3899356962737cf1cdb5f73abdf250f2}{pin\+Mode}} (uint8\+\_\+t pin\+Num, uint8\+\_\+t mode)
+\item 
+void \mbox{\hyperlink{ModmataC_8c_afa1b4c226b17cde2dea3847637c06ff6}{digital\+Write}} (uint8\+\_\+t pin\+Num, uint8\+\_\+t input)
+\item 
+int \mbox{\hyperlink{ModmataC_8c_a1cdfb76b6638cbf6d10d9980bcf01b69}{digital\+Read}} (uint8\+\_\+t pin\+Num)
+\item 
+void \mbox{\hyperlink{ModmataC_8c_ac2d4306c0d380fff55723e7bcc9de079}{analog\+Write}} (uint8\+\_\+t pin\+Num, uint16\+\_\+t input)
+\item 
+int \mbox{\hyperlink{ModmataC_8c_a962e654fcc5531f3286260cc7e134bcd}{analog\+Read}} (uint16\+\_\+t pin\+Num)
+\item 
+void \mbox{\hyperlink{ModmataC_8c_abb6686c58667ed46aafd1a07bf474598}{servo\+Attach}} (uint16\+\_\+t pin\+Num)
+\item 
+void \mbox{\hyperlink{ModmataC_8c_ab4111975c9c77b032f5de701c9ced8dc}{servo\+Detach}} (uint16\+\_\+t pin\+Num)
+\item 
+void \mbox{\hyperlink{ModmataC_8c_a6841c465bec22bbab879d522fb10319a}{servo\+Write}} (uint16\+\_\+t pin\+Num, uint16\+\_\+t input)
+\item 
+int \mbox{\hyperlink{ModmataC_8c_aed4601add8fe6f8a6922dd5bb226e934}{servo\+Read}} (uint16\+\_\+t pin\+Num)
+\item 
+void \mbox{\hyperlink{ModmataC_8c_ab0cd854f2fd35c0579204367c2200ef3}{wire\+Begin}} ()
+\item 
+void \mbox{\hyperlink{ModmataC_8c_a3a5a9b14166cec4ef0b5bd3b44587d19}{wire\+End}} ()
+\item 
+void \mbox{\hyperlink{ModmataC_8c_a1d9dd09db89ea2b9b81c1da3042cd8b9}{wire\+Set\+Clock}} (uint32\+\_\+t clock\+\_\+speed)
+\item 
+void \mbox{\hyperlink{ModmataC_8c_a04194e45cf75e13189b326f2b727485f}{wire\+Write}} (uint8\+\_\+t addr, uint8\+\_\+t reg, uint8\+\_\+t num\+\_\+bytes, uint8\+\_\+t $\ast$data)
+\item 
+uint8\+\_\+t $\ast$ \mbox{\hyperlink{ModmataC_8c_a295a3697953e2d14dad8d7f4df89ad13}{wire\+Read}} (uint8\+\_\+t addr, uint8\+\_\+t reg, int num\+\_\+bytes)
+\item 
+void \mbox{\hyperlink{ModmataC_8c_a2922f187934112a343bbd27d91b833bf}{spi\+Begin}} ()
+\item 
+uint8\+\_\+t $\ast$ \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spi\+Transfer\+Buf}} (int CS\+\_\+pin, uint8\+\_\+t $\ast$buf, uint8\+\_\+t length)
+\item 
+void \mbox{\hyperlink{ModmataC_8c_a9c70d6feae687e62c7872f935e58063e}{spi\+Settings}} (uint32\+\_\+t speed, uint8\+\_\+t order, uint8\+\_\+t mode)
+\item 
+void \mbox{\hyperlink{ModmataC_8c_af36f36f80e3e4d919921b3fadb19e0cf}{spi\+End}} ()
+\item 
+void \mbox{\hyperlink{ModmataC_8c_ad7fdbd3b6dad559d240c98273c181947}{transmit\+Registers}} (uint8\+\_\+t fn\+\_\+code, uint8\+\_\+t argc, uint8\+\_\+t $\ast$argv)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{ModmataC_8c_a962e654fcc5531f3286260cc7e134bcd}\label{ModmataC_8c_a962e654fcc5531f3286260cc7e134bcd}} 
+\index{ModmataC.c@{ModmataC.c}!analogRead@{analogRead}}
+\index{analogRead@{analogRead}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{analogRead()}{analogRead()}}
+{\footnotesize\ttfamily int analog\+Read (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{pin\+Num }\end{DoxyParamCaption})}
+
+Reads the value of an analog pin 
+\begin{DoxyParams}{Parameters}
+{\em (uint8\+\_\+t)} & address \\
+\hline
+{\em (uint8\+\_\+t)} & register \\
+\hline
+{\em (uint8\+\_\+t)} & number of bytes to read \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(uint8\+\_\+t$\ast$) pointer to the data that was read 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{pot_8c-example}{pot.\+c}}, and \mbox{\hyperlink{pot_servo_8c-example}{pot\+\_\+servo.\+c}}.\end{Desc}
+\mbox{\Hypertarget{ModmataC_8c_ac2d4306c0d380fff55723e7bcc9de079}\label{ModmataC_8c_ac2d4306c0d380fff55723e7bcc9de079}} 
+\index{ModmataC.c@{ModmataC.c}!analogWrite@{analogWrite}}
+\index{analogWrite@{analogWrite}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{analogWrite()}{analogWrite()}}
+{\footnotesize\ttfamily void analog\+Write (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{pin\+Num,  }\item[{uint16\+\_\+t}]{input }\end{DoxyParamCaption})}
+
+Writes an analog value to a pin 
+\begin{DoxyParams}{Parameters}
+{\em (uint8\+\_\+t)} & pin number \\
+\hline
+{\em (uint16\+\_\+t)} & value to write \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(void) 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{pot_8c-example}{pot.\+c}}.\end{Desc}
+\mbox{\Hypertarget{ModmataC_8c_aaf912c696192e6a13eb70526891b4cd2}\label{ModmataC_8c_aaf912c696192e6a13eb70526891b4cd2}} 
+\index{ModmataC.c@{ModmataC.c}!closeConnection@{closeConnection}}
+\index{closeConnection@{closeConnection}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{closeConnection()}{closeConnection()}}
+{\footnotesize\ttfamily void close\+Connection (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+disconnect modbus connection if the program does not have an infinite loop 
+\begin{DoxyParams}{Parameters}
+{\em none} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{ds1631_temperature_8c-example}{ds1631\+\_\+temperature.\+c}}, \mbox{\hyperlink{lcd_8c-example}{lcd.\+c}}, \mbox{\hyperlink{nrf24l01_radio_8c-example}{nrf24l01\+\_\+radio.\+c}}, and \mbox{\hyperlink{servo_8c-example}{servo.\+c}}.\end{Desc}
+\mbox{\Hypertarget{ModmataC_8c_a1bf4e4b24163ed99bc92c833adc79dbf}\label{ModmataC_8c_a1bf4e4b24163ed99bc92c833adc79dbf}} 
+\index{ModmataC.c@{ModmataC.c}!connectArduino@{connectArduino}}
+\index{connectArduino@{connectArduino}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{connectArduino()}{connectArduino()}}
+{\footnotesize\ttfamily int connect\+Arduino (\begin{DoxyParamCaption}\item[{char $\ast$}]{port,  }\item[{int}]{baud\+Rate,  }\item[{int}]{id }\end{DoxyParamCaption})}
+
+Start serial connection using specified port and baud rate 
+\begin{DoxyParams}{Parameters}
+{\em (char$\ast$)} & path to the port on which Leonardo is connected \\
+\hline
+{\em (int)} & baud rate \\
+\hline
+{\em (int)} & slave id for Leonardo \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(int) 1 if successful, 0 if unsuccessful 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{blink_8c-example}{blink.\+c}}, \mbox{\hyperlink{button_8c-example}{button.\+c}}, \mbox{\hyperlink{ds1631_temperature_8c-example}{ds1631\+\_\+temperature.\+c}}, \mbox{\hyperlink{lcd_8c-example}{lcd.\+c}}, \mbox{\hyperlink{nrf24l01_radio_8c-example}{nrf24l01\+\_\+radio.\+c}}, \mbox{\hyperlink{pot_8c-example}{pot.\+c}}, \mbox{\hyperlink{pot_servo_8c-example}{pot\+\_\+servo.\+c}}, and \mbox{\hyperlink{servo_8c-example}{servo.\+c}}.\end{Desc}
+\mbox{\Hypertarget{ModmataC_8c_ac0fed4fb18bece58c851f7d76f8ebe38}\label{ModmataC_8c_ac0fed4fb18bece58c851f7d76f8ebe38}} 
+\index{ModmataC.c@{ModmataC.c}!delay@{delay}}
+\index{delay@{delay}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{delay()}{delay()}}
+{\footnotesize\ttfamily void delay (\begin{DoxyParamCaption}\item[{int}]{millis }\end{DoxyParamCaption})}
+
+Causes the system to delay a number of miliseconds 
+\begin{DoxyParams}{Parameters}
+{\em (int)} & milliseconds \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{blink_8c-example}{blink.\+c}}, \mbox{\hyperlink{ds1631_temperature_8c-example}{ds1631\+\_\+temperature.\+c}}, \mbox{\hyperlink{nrf24l01_radio_8c-example}{nrf24l01\+\_\+radio.\+c}}, and \mbox{\hyperlink{servo_8c-example}{servo.\+c}}.\end{Desc}
+\mbox{\Hypertarget{ModmataC_8c_a1669135cd39f5cf5b4d98888b5ef6c80}\label{ModmataC_8c_a1669135cd39f5cf5b4d98888b5ef6c80}} 
+\index{ModmataC.c@{ModmataC.c}!delayMicroseconds@{delayMicroseconds}}
+\index{delayMicroseconds@{delayMicroseconds}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{delayMicroseconds()}{delayMicroseconds()}}
+{\footnotesize\ttfamily void delay\+Microseconds (\begin{DoxyParamCaption}\item[{int}]{micros }\end{DoxyParamCaption})}
+
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{nrf24l01_radio_8c-example}{nrf24l01\+\_\+radio.\+c}}.\end{Desc}
+\mbox{\Hypertarget{ModmataC_8c_a1cdfb76b6638cbf6d10d9980bcf01b69}\label{ModmataC_8c_a1cdfb76b6638cbf6d10d9980bcf01b69}} 
+\index{ModmataC.c@{ModmataC.c}!digitalRead@{digitalRead}}
+\index{digitalRead@{digitalRead}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{digitalRead()}{digitalRead()}}
+{\footnotesize\ttfamily int digital\+Read (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{pin\+Num }\end{DoxyParamCaption})}
+
+Reads the value of a digital pin 
+\begin{DoxyParams}{Parameters}
+{\em (uint8\+\_\+t)} & pin number \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(int) value 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{button_8c-example}{button.\+c}}, and \mbox{\hyperlink{nrf24l01_radio_8c-example}{nrf24l01\+\_\+radio.\+c}}.\end{Desc}
+\mbox{\Hypertarget{ModmataC_8c_afa1b4c226b17cde2dea3847637c06ff6}\label{ModmataC_8c_afa1b4c226b17cde2dea3847637c06ff6}} 
+\index{ModmataC.c@{ModmataC.c}!digitalWrite@{digitalWrite}}
+\index{digitalWrite@{digitalWrite}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{digitalWrite()}{digitalWrite()}}
+{\footnotesize\ttfamily void digital\+Write (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{pin\+Num,  }\item[{uint8\+\_\+t}]{input }\end{DoxyParamCaption})}
+
+Writes a HIGH or LOW value to a digital pin 
+\begin{DoxyParams}{Parameters}
+{\em (uint8\+\_\+t)} & pin number \\
+\hline
+{\em (uint8\+\_\+t)} & input, should be 1 or 0 \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(void) 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{blink_8c-example}{blink.\+c}}, \mbox{\hyperlink{button_8c-example}{button.\+c}}, and \mbox{\hyperlink{nrf24l01_radio_8c-example}{nrf24l01\+\_\+radio.\+c}}.\end{Desc}
+\mbox{\Hypertarget{ModmataC_8c_a4559b9a011fce8a7189d49e81484efd9}\label{ModmataC_8c_a4559b9a011fce8a7189d49e81484efd9}} 
+\index{ModmataC.c@{ModmataC.c}!isValidPin@{isValidPin}}
+\index{isValidPin@{isValidPin}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{isValidPin()}{isValidPin()}}
+{\footnotesize\ttfamily int is\+Valid\+Pin (\begin{DoxyParamCaption}\item[{int}]{pin\+Num }\end{DoxyParamCaption})}
+
+Checks if a pin number is valid The leonardo has pins 1-\/30 
+\begin{DoxyParams}{Parameters}
+{\em (int)} & pint number \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(int) 1 if pin is valid, 0 if invalid 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ModmataC_8c_a3899356962737cf1cdb5f73abdf250f2}\label{ModmataC_8c_a3899356962737cf1cdb5f73abdf250f2}} 
+\index{ModmataC.c@{ModmataC.c}!pinMode@{pinMode}}
+\index{pinMode@{pinMode}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{pinMode()}{pinMode()}}
+{\footnotesize\ttfamily void pin\+Mode (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{pin\+Num,  }\item[{uint8\+\_\+t}]{mode }\end{DoxyParamCaption})}
+
+Sets pin mode 
+\begin{DoxyParams}{Parameters}
+{\em (uint8\+\_\+t)} & pin number \\
+\hline
+{\em (uint8\+\_\+t)} & pin mode \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(void) 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{blink_8c-example}{blink.\+c}}, \mbox{\hyperlink{button_8c-example}{button.\+c}}, \mbox{\hyperlink{nrf24l01_radio_8c-example}{nrf24l01\+\_\+radio.\+c}}, \mbox{\hyperlink{pot_8c-example}{pot.\+c}}, and \mbox{\hyperlink{pot_servo_8c-example}{pot\+\_\+servo.\+c}}.\end{Desc}
+\mbox{\Hypertarget{ModmataC_8c_abb6686c58667ed46aafd1a07bf474598}\label{ModmataC_8c_abb6686c58667ed46aafd1a07bf474598}} 
+\index{ModmataC.c@{ModmataC.c}!servoAttach@{servoAttach}}
+\index{servoAttach@{servoAttach}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{servoAttach()}{servoAttach()}}
+{\footnotesize\ttfamily void servo\+Attach (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{pin\+Num }\end{DoxyParamCaption})}
+
+Attach servo to a pin 
+\begin{DoxyParams}{Parameters}
+{\em (uint16\+\_\+t)} & pin number \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(void) 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{pot_servo_8c-example}{pot\+\_\+servo.\+c}}, and \mbox{\hyperlink{servo_8c-example}{servo.\+c}}.\end{Desc}
+\mbox{\Hypertarget{ModmataC_8c_ab4111975c9c77b032f5de701c9ced8dc}\label{ModmataC_8c_ab4111975c9c77b032f5de701c9ced8dc}} 
+\index{ModmataC.c@{ModmataC.c}!servoDetach@{servoDetach}}
+\index{servoDetach@{servoDetach}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{servoDetach()}{servoDetach()}}
+{\footnotesize\ttfamily void servo\+Detach (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{pin\+Num }\end{DoxyParamCaption})}
+
+Detach servo from a pin 
+\begin{DoxyParams}{Parameters}
+{\em (uint16\+\_\+t)} & pin number \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(void) 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{servo_8c-example}{servo.\+c}}.\end{Desc}
+\mbox{\Hypertarget{ModmataC_8c_aed4601add8fe6f8a6922dd5bb226e934}\label{ModmataC_8c_aed4601add8fe6f8a6922dd5bb226e934}} 
+\index{ModmataC.c@{ModmataC.c}!servoRead@{servoRead}}
+\index{servoRead@{servoRead}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{servoRead()}{servoRead()}}
+{\footnotesize\ttfamily int servo\+Read (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{pin\+Num }\end{DoxyParamCaption})}
+
+Reads the last value written to a servo 
+\begin{DoxyParams}{Parameters}
+{\em (uint16\+\_\+t)} & pin number \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(int) the last value written to the servo 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ModmataC_8c_a6841c465bec22bbab879d522fb10319a}\label{ModmataC_8c_a6841c465bec22bbab879d522fb10319a}} 
+\index{ModmataC.c@{ModmataC.c}!servoWrite@{servoWrite}}
+\index{servoWrite@{servoWrite}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{servoWrite()}{servoWrite()}}
+{\footnotesize\ttfamily void servo\+Write (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{pin\+Num,  }\item[{uint16\+\_\+t}]{input }\end{DoxyParamCaption})}
+
+Write values to a servo assigned pin 
+\begin{DoxyParams}{Parameters}
+{\em (uint16\+\_\+t)} & pin number \\
+\hline
+{\em (uint16\+\_\+t)} & angle value to be written \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(void) 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{pot_servo_8c-example}{pot\+\_\+servo.\+c}}, and \mbox{\hyperlink{servo_8c-example}{servo.\+c}}.\end{Desc}
+\mbox{\Hypertarget{ModmataC_8c_a2922f187934112a343bbd27d91b833bf}\label{ModmataC_8c_a2922f187934112a343bbd27d91b833bf}} 
+\index{ModmataC.c@{ModmataC.c}!spiBegin@{spiBegin}}
+\index{spiBegin@{spiBegin}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{spiBegin()}{spiBegin()}}
+{\footnotesize\ttfamily void spi\+Begin (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Begins SPI communication with default settings (4 Mbps, MSBFIRST, SPI\+\_\+\+MODE0) \begin{DoxyReturn}{Returns}
+(void) 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{nrf24l01_radio_8c-example}{nrf24l01\+\_\+radio.\+c}}.\end{Desc}
+\mbox{\Hypertarget{ModmataC_8c_af36f36f80e3e4d919921b3fadb19e0cf}\label{ModmataC_8c_af36f36f80e3e4d919921b3fadb19e0cf}} 
+\index{ModmataC.c@{ModmataC.c}!spiEnd@{spiEnd}}
+\index{spiEnd@{spiEnd}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{spiEnd()}{spiEnd()}}
+{\footnotesize\ttfamily void spi\+End (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+End SPI communication \begin{DoxyReturn}{Returns}
+(void) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ModmataC_8c_a9c70d6feae687e62c7872f935e58063e}\label{ModmataC_8c_a9c70d6feae687e62c7872f935e58063e}} 
+\index{ModmataC.c@{ModmataC.c}!spiSettings@{spiSettings}}
+\index{spiSettings@{spiSettings}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{spiSettings()}{spiSettings()}}
+{\footnotesize\ttfamily void spi\+Settings (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{speed,  }\item[{uint8\+\_\+t}]{order,  }\item[{uint8\+\_\+t}]{mode }\end{DoxyParamCaption})}
+
+Set specific SPI settings such as communication speed, bit order, and mode 
+\begin{DoxyParams}{Parameters}
+{\em (uint32\+\_\+t)} & Communication speed \\
+\hline
+{\em (uint8\+\_\+t)} & bit order (MSBFIRST or LSBFIRST) \\
+\hline
+{\em (uint8\+\_\+t)} & data mode (SPI\+\_\+\+MODE0, SPI\+\_\+\+MODE1, SPI\+\_\+\+MODE2, or SPI\+\_\+\+MODE3) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(void) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}\label{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}} 
+\index{ModmataC.c@{ModmataC.c}!spiTransferBuf@{spiTransferBuf}}
+\index{spiTransferBuf@{spiTransferBuf}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{spiTransferBuf()}{spiTransferBuf()}}
+{\footnotesize\ttfamily uint8\+\_\+t$\ast$ spi\+Transfer\+Buf (\begin{DoxyParamCaption}\item[{int}]{CS\+\_\+pin,  }\item[{uint8\+\_\+t $\ast$}]{buf,  }\item[{uint8\+\_\+t}]{length }\end{DoxyParamCaption})}
+
+Transfer an array of bytes over SPI 
+\begin{DoxyParams}{Parameters}
+{\em (int)} & Chip Select pin number \\
+\hline
+{\em (uint8\+\_\+t$\ast$)} & Array of bytes to transfer over MOSI \\
+\hline
+{\em (uint8\+\_\+t)} & Array length \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(uint8\+\_\+t$\ast$) Array of bytes sent back over MISO 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{nrf24l01_radio_8c-example}{nrf24l01\+\_\+radio.\+c}}.\end{Desc}
+\mbox{\Hypertarget{ModmataC_8c_ad7fdbd3b6dad559d240c98273c181947}\label{ModmataC_8c_ad7fdbd3b6dad559d240c98273c181947}} 
+\index{ModmataC.c@{ModmataC.c}!transmitRegisters@{transmitRegisters}}
+\index{transmitRegisters@{transmitRegisters}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{transmitRegisters()}{transmitRegisters()}}
+{\footnotesize\ttfamily void transmit\+Registers (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{fn\+\_\+code,  }\item[{uint8\+\_\+t}]{argc,  }\item[{uint8\+\_\+t $\ast$}]{argv }\end{DoxyParamCaption})}
+
+Send bytes over Modmata. For use in custom Modmata functions \begin{DoxyReturn}{Returns}
+(void) 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{lcd_8c-example}{lcd.\+c}}.\end{Desc}
+\mbox{\Hypertarget{ModmataC_8c_ab0cd854f2fd35c0579204367c2200ef3}\label{ModmataC_8c_ab0cd854f2fd35c0579204367c2200ef3}} 
+\index{ModmataC.c@{ModmataC.c}!wireBegin@{wireBegin}}
+\index{wireBegin@{wireBegin}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{wireBegin()}{wireBegin()}}
+{\footnotesize\ttfamily void wire\+Begin (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Begins an I2C connection \begin{DoxyReturn}{Returns}
+(void) 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{ds1631_temperature_8c-example}{ds1631\+\_\+temperature.\+c}}.\end{Desc}
+\mbox{\Hypertarget{ModmataC_8c_a3a5a9b14166cec4ef0b5bd3b44587d19}\label{ModmataC_8c_a3a5a9b14166cec4ef0b5bd3b44587d19}} 
+\index{ModmataC.c@{ModmataC.c}!wireEnd@{wireEnd}}
+\index{wireEnd@{wireEnd}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{wireEnd()}{wireEnd()}}
+{\footnotesize\ttfamily void wire\+End (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Terminates an I2C connection \begin{DoxyReturn}{Returns}
+(void) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ModmataC_8c_a295a3697953e2d14dad8d7f4df89ad13}\label{ModmataC_8c_a295a3697953e2d14dad8d7f4df89ad13}} 
+\index{ModmataC.c@{ModmataC.c}!wireRead@{wireRead}}
+\index{wireRead@{wireRead}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{wireRead()}{wireRead()}}
+{\footnotesize\ttfamily uint8\+\_\+t$\ast$ wire\+Read (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{addr,  }\item[{uint8\+\_\+t}]{reg,  }\item[{int}]{num\+\_\+bytes }\end{DoxyParamCaption})}
+
+Reads data from an I2C connection 
+\begin{DoxyParams}{Parameters}
+{\em (uint8\+\_\+t)} & address \\
+\hline
+{\em (uint8\+\_\+t)} & register \\
+\hline
+{\em (uint8\+\_\+t)} & number of bytes to read \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(uint8\+\_\+t$\ast$) pointer to the data that was read 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{ds1631_temperature_8c-example}{ds1631\+\_\+temperature.\+c}}.\end{Desc}
+\mbox{\Hypertarget{ModmataC_8c_a1d9dd09db89ea2b9b81c1da3042cd8b9}\label{ModmataC_8c_a1d9dd09db89ea2b9b81c1da3042cd8b9}} 
+\index{ModmataC.c@{ModmataC.c}!wireSetClock@{wireSetClock}}
+\index{wireSetClock@{wireSetClock}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{wireSetClock()}{wireSetClock()}}
+{\footnotesize\ttfamily void wire\+Set\+Clock (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{clock\+\_\+speed }\end{DoxyParamCaption})}
+
+Sets I2C clock speed 
+\begin{DoxyParams}{Parameters}
+{\em (int)} & clock speed \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(void) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ModmataC_8c_a04194e45cf75e13189b326f2b727485f}\label{ModmataC_8c_a04194e45cf75e13189b326f2b727485f}} 
+\index{ModmataC.c@{ModmataC.c}!wireWrite@{wireWrite}}
+\index{wireWrite@{wireWrite}!ModmataC.c@{ModmataC.c}}
+\doxysubsubsection{\texorpdfstring{wireWrite()}{wireWrite()}}
+{\footnotesize\ttfamily void wire\+Write (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{addr,  }\item[{uint8\+\_\+t}]{reg,  }\item[{uint8\+\_\+t}]{num\+\_\+bytes,  }\item[{uint8\+\_\+t $\ast$}]{data }\end{DoxyParamCaption})}
+
+Writes data over an I2C connection 
+\begin{DoxyParams}{Parameters}
+{\em (uint8\+\_\+t)} & address \\
+\hline
+{\em (uint8\+\_\+t)} & register \\
+\hline
+{\em (uint8\+\_\+t)} & number of bytes to be written \\
+\hline
+{\em (uint8\+\_\+t)} & data being written \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(void) 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples]\par
+\mbox{\hyperlink{ds1631_temperature_8c-example}{ds1631\+\_\+temperature.\+c}}.\end{Desc}

@@ -1,0 +1,404 @@
+\hypertarget{nrf24l01_radio_8c-example}{}\doxysection{nrf24l01\+\_\+radio.\+c}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <\mbox{\hyperlink{ModmataC_8h}{ModmataC.h}}>}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <ncurses.h>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{preprocessor}{\#define IRQ 8}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#define CE 9}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#define CS 10}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordtype}{void} printReg(\textcolor{keywordtype}{char}* name, uint8\_t reg, \textcolor{keywordtype}{int} num\_bytes) \{}
+\DoxyCodeLine{    uint8\_t *write\_buf = malloc(\textcolor{keyword}{sizeof}(uint8\_t) * (num\_bytes + 1));}
+\DoxyCodeLine{    write\_buf[0] = reg;}
+\DoxyCodeLine{    \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < num\_bytes; i++) \{}
+\DoxyCodeLine{        write\_buf[i+1] = 0xAA;}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{    uint8\_t *read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, num\_bytes + 1);}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    printw(\textcolor{stringliteral}{"{}\%s: "{}}, name);}
+\DoxyCodeLine{    \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < num\_bytes; i++) \{}
+\DoxyCodeLine{        printw(\textcolor{stringliteral}{"{}\%02x "{}}, read\_buf[i+1]);}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{    printw(\textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{}
+\DoxyCodeLine{    free(write\_buf);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordtype}{void} setTransmitMode(uint8\_t my\_addr, uint8\_t their\_addr, \textcolor{keywordtype}{int} debug) \{}
+\DoxyCodeLine{    uint8\_t write\_buf[6];}
+\DoxyCodeLine{    uint8\_t *read\_buf;}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// SETUP\_RETR Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set max delay and retransmits}}
+\DoxyCodeLine{    write\_buf[0] = 0x04 | 0x20;}
+\DoxyCodeLine{    write\_buf[1] = 0xff;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// RF\_SETUP Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set data rate to 250kbps at max power}}
+\DoxyCodeLine{    write\_buf[0] = 0x06 | 0x20;}
+\DoxyCodeLine{    write\_buf[1] = 0x27;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// RF\_PW\_P0 Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set payload size on pipe 0 to 32 bytes}}
+\DoxyCodeLine{    write\_buf[0] = 0x11 | 0x20;}
+\DoxyCodeLine{    write\_buf[1] = 0x20;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// RF\_PW\_P1 Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set payload size on pipe 1 to 32 bytes}}
+\DoxyCodeLine{    write\_buf[0] = 0x12 | 0x20;}
+\DoxyCodeLine{    write\_buf[1] = 0x20;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// EN\_AA Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set auto-\/acknowledgement on receive pipes}}
+\DoxyCodeLine{    write\_buf[0] = 0x01 | 0x20;}
+\DoxyCodeLine{    write\_buf[1] = 0x03;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// EN\_RXADDR Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Enable receive pipes}}
+\DoxyCodeLine{    write\_buf[0] = 0x02 | 0x20;}
+\DoxyCodeLine{    write\_buf[1] = 0x03;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// CONFIG Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set transmit mode and 2-\/byte CRC's}}
+\DoxyCodeLine{    write\_buf[0] = 0x00 | 0x20;}
+\DoxyCodeLine{    write\_buf[1] = 0x0e;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// RF\_CH Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set frequency channel to 2.476 GHz}}
+\DoxyCodeLine{    write\_buf[0] = 0x05 | 0x20;}
+\DoxyCodeLine{    write\_buf[1] = 0x4c;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// TX\_ADDR Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set to receiver address}}
+\DoxyCodeLine{    write\_buf[0] = 0x10 | 0x20;}
+\DoxyCodeLine{    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 1; i < 6; i++) \{}
+\DoxyCodeLine{        write\_buf[i] = their\_addr;}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 6);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// RX\_ADDR\_P0 Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set to receiver address}}
+\DoxyCodeLine{    write\_buf[0] = 0x0a | 0x20;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 6);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// RX\_ADDR\_P1 Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set to own address}}
+\DoxyCodeLine{    write\_buf[0] = 0x0b | 0x20;}
+\DoxyCodeLine{    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 1; i < 6; i++) \{}
+\DoxyCodeLine{        write\_buf[i] = my\_addr;}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 6);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// STATUS Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Clear current status}}
+\DoxyCodeLine{    write\_buf[0] = 0x07 | 0x20;}
+\DoxyCodeLine{    write\_buf[1] = 0x7e;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{keywordflow}{if}(debug) \{}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}SETUP\_RETR"{}}, 0x04, 1);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}RF\_SETUP"{}}, 0x06, 1);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}RF\_PW\_P0"{}}, 0x11, 1);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}RF\_PW\_P1"{}}, 0x12, 1);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}EN\_AA"{}}, 0x01, 1);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}EN\_RXADDR"{}}, 0x02, 1);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}CONFIG"{}}, 0x00, 1);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}RF\_CH"{}}, 0x05, 1);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}TX\_ADDR"{}}, 0x10, 5);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}RX\_ADDR\_P0"{}}, 0x0a, 5);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}RX\_ADDR\_P1"{}}, 0x0b, 5);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}STATUS"{}}, 0x07, 1);}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordtype}{void} setReceiveMode(uint8\_t my\_addr, \textcolor{keywordtype}{int} debug) \{}
+\DoxyCodeLine{    uint8\_t write\_buf[6];}
+\DoxyCodeLine{    uint8\_t *read\_buf;}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// SETUP\_RETR Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set max delay and retransmits}}
+\DoxyCodeLine{    write\_buf[0] = 0x04 | 0x20;}
+\DoxyCodeLine{    write\_buf[1] = 0xff;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// RF\_SETUP Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set data rate to 250kbps at max power}}
+\DoxyCodeLine{    write\_buf[0] = 0x06 | 0x20;}
+\DoxyCodeLine{    write\_buf[1] = 0x27;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// RF\_PW\_P0 Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set payload size on pipe 0 to 32 bytes}}
+\DoxyCodeLine{    write\_buf[0] = 0x11 | 0x20;}
+\DoxyCodeLine{    write\_buf[1] = 0x20;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// RF\_PW\_P1 Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set payload size on pipe 1 to 32 bytes}}
+\DoxyCodeLine{    write\_buf[0] = 0x12 | 0x20;}
+\DoxyCodeLine{    write\_buf[1] = 0x20;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// EN\_AA Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set auto-\/acknowledgement on receive pipes}}
+\DoxyCodeLine{    write\_buf[0] = 0x01 | 0x20;}
+\DoxyCodeLine{    write\_buf[1] = 0x03;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// EN\_RXADDR Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Enable receive pipes}}
+\DoxyCodeLine{    write\_buf[0] = 0x02 | 0x20;}
+\DoxyCodeLine{    write\_buf[1] = 0x03;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    \textcolor{comment}{// CONFIG Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set receive mode and 2-\/byte CRC's}}
+\DoxyCodeLine{    write\_buf[0] = 0x00 | 0x20;}
+\DoxyCodeLine{    write\_buf[1] = 0x0f;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// RF\_CH Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set frequency channel to 2.476 GHz}}
+\DoxyCodeLine{    write\_buf[0] = 0x05 | 0x20;}
+\DoxyCodeLine{    write\_buf[1] = 0x4c;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// TX\_ADDR Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set to own address}}
+\DoxyCodeLine{    write\_buf[0] = 0x10 | 0x20;}
+\DoxyCodeLine{    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 1; i < 6; i++) \{}
+\DoxyCodeLine{        write\_buf[i] = my\_addr;}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 6);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// RX\_ADDR\_P0 Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set to own address}}
+\DoxyCodeLine{    write\_buf[0] = 0x0a | 0x20;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 6);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// RX\_ADDR\_P1 Register}}
+\DoxyCodeLine{    \textcolor{comment}{// Set to own address}}
+\DoxyCodeLine{    write\_buf[0] = 0x0b | 0x20;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 6);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// STATUS}}
+\DoxyCodeLine{    \textcolor{comment}{// Clear status register}}
+\DoxyCodeLine{    write\_buf[0] = 0x07 | 0x20;}
+\DoxyCodeLine{    write\_buf[1] = 0x7e;}
+\DoxyCodeLine{    read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{    free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{keywordflow}{if} (debug) \{}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}SETUP\_RETR"{}}, 0x04, 1);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}RF\_SETUP"{}}, 0x06, 1);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}RF\_PW\_P0"{}}, 0x11, 1);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}RF\_PW\_P1"{}}, 0x12, 1);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}EN\_AA"{}}, 0x01, 1);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}EN\_RXADDR"{}}, 0x02, 1);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}CONFIG"{}}, 0x00, 1);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}RF\_CH"{}}, 0x05, 1);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}TX\_ADDR"{}}, 0x10, 5);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}RX\_ADDR\_P0"{}}, 0x0a, 5);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}RX\_ADDR\_P1"{}}, 0x0b, 5);}
+\DoxyCodeLine{        printReg(\textcolor{stringliteral}{"{}STATUS"{}}, 0x7e, 1);}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{    \textcolor{comment}{// start serial connection with arduino, given a port, baud rate, and id}}
+\DoxyCodeLine{    \mbox{\hyperlink{ModmataC_8c_a1bf4e4b24163ed99bc92c833adc79dbf}{connectArduino}}(\textcolor{stringliteral}{"{}/dev/ttyACM0"{}}, 115200, 1);}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    \textcolor{comment}{// Set up chip enable pins for SPI}}
+\DoxyCodeLine{    \mbox{\hyperlink{ModmataC_8c_a3899356962737cf1cdb5f73abdf250f2}{pinMode}}(CS, \mbox{\hyperlink{ModmataC_8h_a61a3c9a18380aafb6e430e79bf596557}{OUTPUT}});}
+\DoxyCodeLine{    \mbox{\hyperlink{ModmataC_8c_a3899356962737cf1cdb5f73abdf250f2}{pinMode}}(CE, \mbox{\hyperlink{ModmataC_8h_a61a3c9a18380aafb6e430e79bf596557}{OUTPUT}});}
+\DoxyCodeLine{    \mbox{\hyperlink{ModmataC_8c_a3899356962737cf1cdb5f73abdf250f2}{pinMode}}(IRQ, \mbox{\hyperlink{ModmataC_8h_a1bb283bd7893b9855e2f23013891fc82}{INPUT}});}
+\DoxyCodeLine{    \mbox{\hyperlink{ModmataC_8c_afa1b4c226b17cde2dea3847637c06ff6}{digitalWrite}}(CS, \mbox{\hyperlink{ModmataC_8h_a5bb885982ff66a2e0a0a45a8ee9c35e2}{HIGH}});}
+\DoxyCodeLine{    \mbox{\hyperlink{ModmataC_8c_afa1b4c226b17cde2dea3847637c06ff6}{digitalWrite}}(CE, \mbox{\hyperlink{ModmataC_8h_a5bb885982ff66a2e0a0a45a8ee9c35e2}{HIGH}});}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    \textcolor{comment}{// Start up SPI library}}
+\DoxyCodeLine{    \mbox{\hyperlink{ModmataC_8c_a2922f187934112a343bbd27d91b833bf}{spiBegin}}();}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// Start ncurses}}
+\DoxyCodeLine{    initscr();}
+\DoxyCodeLine{    scrollok(stdscr, 1);}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    \textcolor{comment}{// Set addresses for users}}
+\DoxyCodeLine{    \textcolor{keywordtype}{int} my\_addr = -\/1;}
+\DoxyCodeLine{    printw(\textcolor{stringliteral}{"{}Choose your device address (0-\/255): "{}});}
+\DoxyCodeLine{    scanw(\textcolor{stringliteral}{"{}\%d"{}}, \&my\_addr);}
+\DoxyCodeLine{    \textcolor{keywordflow}{while} (my\_addr < 0 || my\_addr > 255) \{}
+\DoxyCodeLine{        printw(\textcolor{stringliteral}{"{}Invalid address!\(\backslash\)n"{}});}
+\DoxyCodeLine{        printw(\textcolor{stringliteral}{"{}Choose your device address (0-\/255): "{}});}
+\DoxyCodeLine{        scanw(\textcolor{stringliteral}{"{}\%d"{}}, \&my\_addr);}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    \textcolor{keywordtype}{int} their\_addr = -\/1;}
+\DoxyCodeLine{    printw(\textcolor{stringliteral}{"{}Enter a device address to communicate with (0-\/255): "{}});}
+\DoxyCodeLine{    scanw(\textcolor{stringliteral}{"{}\%d"{}}, \&their\_addr);}
+\DoxyCodeLine{    \textcolor{keywordflow}{while}(their\_addr < 0 || their\_addr > 255) \{}
+\DoxyCodeLine{        printw(\textcolor{stringliteral}{"{}Invalid address!\(\backslash\)n"{}});}
+\DoxyCodeLine{        printw(\textcolor{stringliteral}{"{}Enter a device address to communicate with (0-\/255): "{}});}
+\DoxyCodeLine{        scanw(\textcolor{stringliteral}{"{}\%d"{}}, \&their\_addr);}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// Power on the nrf24}}
+\DoxyCodeLine{    \mbox{\hyperlink{ModmataC_8c_afa1b4c226b17cde2dea3847637c06ff6}{digitalWrite}}(CE, \mbox{\hyperlink{ModmataC_8h_ab811d8c6ff3a505312d3276590444289}{LOW}});}
+\DoxyCodeLine{    \mbox{\hyperlink{ModmataC_8c_ac0fed4fb18bece58c851f7d76f8ebe38}{delay}}(100);}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    \textcolor{comment}{// Set all the registers to receive messages}}
+\DoxyCodeLine{    setReceiveMode(my\_addr, 0);}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    \textcolor{comment}{// Enter receive mode}}
+\DoxyCodeLine{    \mbox{\hyperlink{ModmataC_8c_afa1b4c226b17cde2dea3847637c06ff6}{digitalWrite}}(CE, \mbox{\hyperlink{ModmataC_8h_a5bb885982ff66a2e0a0a45a8ee9c35e2}{HIGH}});}
+\DoxyCodeLine{    \mbox{\hyperlink{ModmataC_8c_a1669135cd39f5cf5b4d98888b5ef6c80}{delayMicroseconds}}(140);}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    }
+\DoxyCodeLine{    \textcolor{keywordtype}{char} str[33] = \{0x00\};}
+\DoxyCodeLine{    \textcolor{comment}{// char *s = str;}}
+\DoxyCodeLine{    \textcolor{comment}{// size\_t str\_size = 32;}}
+\DoxyCodeLine{    \textcolor{keywordtype}{char} c;}
+\DoxyCodeLine{    \textcolor{keywordflow}{while}(1) \{}
+\DoxyCodeLine{        \textcolor{comment}{// printReg("{}STATUS"{}, 0x07, 1);}}
+\DoxyCodeLine{        nodelay(stdscr, 1);}
+\DoxyCodeLine{        c = getch();}
+\DoxyCodeLine{        \textcolor{keywordflow}{if} (c == 0x0A) \{}
+\DoxyCodeLine{            nodelay(stdscr, 0);}
+\DoxyCodeLine{            printw(\textcolor{stringliteral}{"{}> "{}});}
+\DoxyCodeLine{            getnstr(str, 32);}
+\DoxyCodeLine{            }
+\DoxyCodeLine{            \textcolor{comment}{// Switch to transmit mode}}
+\DoxyCodeLine{            \mbox{\hyperlink{ModmataC_8c_afa1b4c226b17cde2dea3847637c06ff6}{digitalWrite}}(CE, \mbox{\hyperlink{ModmataC_8h_ab811d8c6ff3a505312d3276590444289}{LOW}});}
+\DoxyCodeLine{            setTransmitMode(my\_addr, their\_addr, 0);}
+\DoxyCodeLine{            \mbox{\hyperlink{ModmataC_8c_afa1b4c226b17cde2dea3847637c06ff6}{digitalWrite}}(CE, \mbox{\hyperlink{ModmataC_8h_a5bb885982ff66a2e0a0a45a8ee9c35e2}{HIGH}});}
+\DoxyCodeLine{            \mbox{\hyperlink{ModmataC_8c_a1669135cd39f5cf5b4d98888b5ef6c80}{delayMicroseconds}}(140);}
+\DoxyCodeLine{            }
+\DoxyCodeLine{            \textcolor{comment}{// Set up buffers for byte transfers}}
+\DoxyCodeLine{            uint8\_t wr\_buf[33] = \{0x00\};}
+\DoxyCodeLine{            uint8\_t *read\_buf;}
+\DoxyCodeLine{}
+\DoxyCodeLine{            \textcolor{comment}{// Clear TX FIFO}}
+\DoxyCodeLine{            wr\_buf[0] = 0xE1;}
+\DoxyCodeLine{            read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, wr\_buf, 1);}
+\DoxyCodeLine{            free(read\_buf);}
+\DoxyCodeLine{            }
+\DoxyCodeLine{            \textcolor{comment}{// Clear RX FIFO}}
+\DoxyCodeLine{            wr\_buf[0] = 0xE2;}
+\DoxyCodeLine{            read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, wr\_buf, 1);}
+\DoxyCodeLine{            free(read\_buf);}
+\DoxyCodeLine{            }
+\DoxyCodeLine{            \textcolor{comment}{// Queue up the message}}
+\DoxyCodeLine{            wr\_buf[0] = 0xA0;}
+\DoxyCodeLine{            \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; str[i] != 0x00; i++) \{ \textcolor{comment}{// This should work right?}}
+\DoxyCodeLine{                wr\_buf[i+1] = str[i];}
+\DoxyCodeLine{            \}}
+\DoxyCodeLine{            read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, wr\_buf, 33);}
+\DoxyCodeLine{            free(read\_buf);}
+\DoxyCodeLine{            }
+\DoxyCodeLine{            \textcolor{comment}{// Wait for message to send (IRQ goes low)}}
+\DoxyCodeLine{            \textcolor{keywordflow}{while}(\mbox{\hyperlink{ModmataC_8c_a1cdfb76b6638cbf6d10d9980bcf01b69}{digitalRead}}(IRQ));}
+\DoxyCodeLine{            }
+\DoxyCodeLine{            \textcolor{comment}{/*}}
+\DoxyCodeLine{\textcolor{comment}{            // Check for ACK from receiver}}
+\DoxyCodeLine{\textcolor{comment}{            wr\_buf[0] = 0x07;}}
+\DoxyCodeLine{\textcolor{comment}{            read\_buf = spiTransferBuf(CS, wr\_buf, 2);}}
+\DoxyCodeLine{\textcolor{comment}{            if((read\_buf[1] \& 0x20) == 0x20) \{}}
+\DoxyCodeLine{\textcolor{comment}{                // printf("{}Message sent!\(\backslash\)n"{});}}
+\DoxyCodeLine{\textcolor{comment}{            \}}}
+\DoxyCodeLine{\textcolor{comment}{            else if ((read\_buf[1] \& 0x10) == 0x10) \{}}
+\DoxyCodeLine{\textcolor{comment}{                printw("{}No ACK received :(\(\backslash\)n"{});}}
+\DoxyCodeLine{\textcolor{comment}{            \}}}
+\DoxyCodeLine{\textcolor{comment}{            else \{}}
+\DoxyCodeLine{\textcolor{comment}{                printw("{}Unknown error: \%02x\(\backslash\)n"{}, read\_buf[1]);}}
+\DoxyCodeLine{\textcolor{comment}{            \}}}
+\DoxyCodeLine{\textcolor{comment}{            free(read\_buf);}}
+\DoxyCodeLine{\textcolor{comment}{            */}}
+\DoxyCodeLine{}
+\DoxyCodeLine{            \textcolor{comment}{// Clear TX FIFO again}}
+\DoxyCodeLine{            wr\_buf[0] = 0xE1;}
+\DoxyCodeLine{            read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, wr\_buf, 1);}
+\DoxyCodeLine{            free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{            \textcolor{comment}{// Switch back to receive mode}}
+\DoxyCodeLine{            \mbox{\hyperlink{ModmataC_8c_afa1b4c226b17cde2dea3847637c06ff6}{digitalWrite}}(CE, \mbox{\hyperlink{ModmataC_8h_ab811d8c6ff3a505312d3276590444289}{LOW}});}
+\DoxyCodeLine{            setReceiveMode(my\_addr, 0);}
+\DoxyCodeLine{            \mbox{\hyperlink{ModmataC_8c_afa1b4c226b17cde2dea3847637c06ff6}{digitalWrite}}(CE, \mbox{\hyperlink{ModmataC_8h_a5bb885982ff66a2e0a0a45a8ee9c35e2}{HIGH}});}
+\DoxyCodeLine{            \mbox{\hyperlink{ModmataC_8c_a1669135cd39f5cf5b4d98888b5ef6c80}{delayMicroseconds}}(140);}
+\DoxyCodeLine{        \}}
+\DoxyCodeLine{            }
+\DoxyCodeLine{        \textcolor{comment}{// Check for received message}}
+\DoxyCodeLine{        \textcolor{keywordflow}{if} (!\mbox{\hyperlink{ModmataC_8c_a1cdfb76b6638cbf6d10d9980bcf01b69}{digitalRead}}(IRQ)) \{}
+\DoxyCodeLine{            \textcolor{comment}{// printf("{}Message available!\(\backslash\)n"{});}}
+\DoxyCodeLine{            uint8\_t write\_buf[33];}
+\DoxyCodeLine{            uint8\_t *read\_buf;}
+\DoxyCodeLine{            }
+\DoxyCodeLine{            \textcolor{comment}{// Flush TX FIFO}}
+\DoxyCodeLine{            write\_buf[0] = 0xE1;}
+\DoxyCodeLine{            read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 1);}
+\DoxyCodeLine{            free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{            \textcolor{comment}{// R\_RX\_PAYLOAD}}
+\DoxyCodeLine{            printw(\textcolor{stringliteral}{"{}< "{}});}
+\DoxyCodeLine{            write\_buf[0] = 0x61;}
+\DoxyCodeLine{            read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 33);}
+\DoxyCodeLine{            \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < 32; i++) \{}
+\DoxyCodeLine{                printw(\textcolor{stringliteral}{"{}\%c"{}}, read\_buf[i+1]);}
+\DoxyCodeLine{            \}}
+\DoxyCodeLine{            printw(\textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{            free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{            \textcolor{comment}{// Flush RX FIFO}}
+\DoxyCodeLine{            write\_buf[0] = 0xE2;}
+\DoxyCodeLine{            read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 1);}
+\DoxyCodeLine{            free(read\_buf);}
+\DoxyCodeLine{}
+\DoxyCodeLine{            \textcolor{comment}{// Clear STATUS Register}}
+\DoxyCodeLine{            write\_buf[0] = 0x07 | 0x20;}
+\DoxyCodeLine{            write\_buf[1] = 0x7E;}
+\DoxyCodeLine{            read\_buf = \mbox{\hyperlink{ModmataC_8c_a65df109fe9b082e71066dd10811d099d}{spiTransferBuf}}(CS, write\_buf, 2);}
+\DoxyCodeLine{            free(read\_buf);}
+\DoxyCodeLine{        \}}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    \textcolor{comment}{// Close ncurses window }}
+\DoxyCodeLine{    endwin();}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{// Disconnect modmata}}
+\DoxyCodeLine{    \mbox{\hyperlink{ModmataC_8c_aaf912c696192e6a13eb70526891b4cd2}{closeConnection}}();   }
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+
+\end{DoxyCodeInclude}
+ 

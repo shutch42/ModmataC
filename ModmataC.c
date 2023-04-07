@@ -26,13 +26,16 @@ Authors:
 
 */
 
-/*
-a note on our modified modbus command[] format:
-        command[0]  = command value (1 for pinmode, 2 for digital write, etc)
-        command[1]  = num of arguments included in the command
-  command[3 ... n]  = command arguments
-*/
-
+/**
+ * @example blink.c
+ * @example button.c
+ * @example ds1631_temperature.c
+ * @example lcd.c
+ * @example nrf24l01_radio.c
+ * @example pot.c
+ * @example pot_servo.c
+ * @example servo.c
+ */
 
 #include "ModmataC.h"
 
@@ -378,12 +381,22 @@ uint8_t* wireRead(uint8_t addr, uint8_t reg, int num_bytes) {
 	return result;
 }
 
-
+/**
+Begins SPI communication with default settings (4 Mbps, MSBFIRST, SPI_MODE0)
+@return (void)
+*/
 void spiBegin() {
 	uint16_t command[1] = {SPIBEGIN << 8};
 	modbus_write_registers(arduino, 0, 1, command);
 }
 
+/**
+Transfer an array of bytes over SPI
+@param (int) Chip Select pin number
+@param (uint8_t*) Array of bytes to transfer over MOSI
+@param (uint8_t) Array length
+@return (uint8_t*) Array of bytes sent back over MISO
+*/
 uint8_t* spiTransferBuf(int CS_pin, uint8_t *buf, uint8_t length) {
 	uint16_t *command = malloc(sizeof(uint16_t) * (2 + length/2));
 	command[0] = (SPITRANSFER << 8) | (length + 1);
@@ -416,16 +429,31 @@ uint8_t* spiTransferBuf(int CS_pin, uint8_t *buf, uint8_t length) {
 	return result;	
 }
 
+/**
+Set specific SPI settings such as communication speed, bit order, and mode
+@param (uint32_t) Communication speed
+@param (uint8_t) bit order (MSBFIRST or LSBFIRST)
+@param (uint8_t) data mode (SPI_MODE0, SPI_MODE1, SPI_MODE2, or SPI_MODE3)
+@return (void)
+*/
 void spiSettings(uint32_t speed, uint8_t order, uint8_t mode) {
 	uint16_t command[4] = {SPISETTINGS << 8 | 6, speed >> 16, speed & 0x0000ffff, order << 8 | mode};
 	modbus_write_registers(arduino, 0, 4, command);
 }
 
+/**
+End SPI communication
+@return (void)
+*/
 void spiEnd() {
 	uint16_t command[1] = {SPIEND << 8};
 	modbus_write_registers(arduino, 0, 1, command);
 }
 
+/**
+Send bytes over Modmata. For use in custom Modmata functions
+@return (void)
+*/
 void transmitRegisters(uint8_t fn_code, uint8_t argc, uint8_t* argv) {
 	uint16_t *command = malloc(sizeof(uint16_t) * 1+(argc+1)/2);
 	command[0] = fn_code << 8 | argc;

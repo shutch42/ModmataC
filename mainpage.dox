@@ -1,0 +1,11 @@
+/**
+@mainpage ModmataC
+@section Introduction
+ModmataC is a client-side communcications library for Modmata, a practical combination of the Modbus and Firmata communication protocols. This library can be used to write programs in C that communicate with the GPIO of a Arduino Leonardo. Modbus communication in this library is done using libmodbus.
+
+@section Installation
+ModmataC can be installed as a tarball from the release on our github page. Simply extract the tarball, and then run `sudo make install`. Just make sure that you have libtool installed first.
+
+@section Usage
+To use this library, include it in your C program with `#include <ModmataC.h>`. To compile, use gcc with the -l flag: `gcc example.c -lModmataC`.
+*/

@@ -1,0 +1,30 @@
+\hypertarget{pot_servo_8c-example}{}\doxysection{pot\+\_\+servo.\+c}
+
+\begin{DoxyCodeInclude}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <\mbox{\hyperlink{ModmataC_8h}{ModmataC.h}}>}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{    \textcolor{comment}{// start serial connection with arduino, given a port and baud rate}}
+\DoxyCodeLine{    \mbox{\hyperlink{ModmataC_8c_a1bf4e4b24163ed99bc92c833adc79dbf}{connectArduino}}(\textcolor{stringliteral}{"{}/dev/ttyACM0"{}}, 115200, 1);}
+\DoxyCodeLine{   }
+\DoxyCodeLine{    \textcolor{keywordtype}{int} value = -\/1;}
+\DoxyCodeLine{    \textcolor{keywordtype}{int} led\_val = 0;}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \mbox{\hyperlink{ModmataC_8c_a3899356962737cf1cdb5f73abdf250f2}{pinMode}}(18, \mbox{\hyperlink{ModmataC_8h_a1bb283bd7893b9855e2f23013891fc82}{INPUT}});}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    \mbox{\hyperlink{ModmataC_8c_abb6686c58667ed46aafd1a07bf474598}{servoAttach}}(6);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{keywordflow}{while}(1) \{}
+\DoxyCodeLine{        value = \mbox{\hyperlink{ModmataC_8c_a962e654fcc5531f3286260cc7e134bcd}{analogRead}}(18) / 1024.0 * 180;}
+\DoxyCodeLine{}
+\DoxyCodeLine{        \textcolor{keywordflow}{if}(value >= 0 \&\& value <= 180)}
+\DoxyCodeLine{        \{}
+\DoxyCodeLine{            \mbox{\hyperlink{ModmataC_8c_a6841c465bec22bbab879d522fb10319a}{servoWrite}}(6, value);}
+\DoxyCodeLine{        \}}
+\DoxyCodeLine{        printf(\textcolor{stringliteral}{"{}\%i\(\backslash\)n"{}}, value);}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+
+\end{DoxyCodeInclude}
+ 
