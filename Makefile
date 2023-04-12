@@ -7,6 +7,7 @@ install:
 	mv libModmataC.so /usr/lib
 	cp ModmataC.h /usr/include
 	rm ModmataC.o
+	ldconfig
 
 uninstall:
 	cd libmodbus/src && make uninstall
